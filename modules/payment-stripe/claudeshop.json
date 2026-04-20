@@ -1,0 +1,30 @@
+{
+  "$schema": "https://claudeshop.dev/schema/module.v1.json",
+  "id": "@claudeshop/payment-stripe",
+  "name": "Stripe Payments",
+  "version": "0.1.0",
+  "description": "Accept card + wallet payments via Stripe PaymentIntents. Supports Apple Pay, Google Pay, Klarna, SEPA, iDEAL.",
+  "author": "ClaudeShop",
+  "homepage": "https://claudeshop.dev/modules/payment-stripe",
+  "repository": "https://github.com/claudeshop/claudeshop",
+  "api": {
+    "min": "1.0.0",
+    "max": "2.0.0"
+  },
+  "trust": "first-party",
+  "isolation": "in-process",
+  "permissions": [
+    "order:read",
+    "order:write",
+    "payment:write",
+    "http:outbound:api.stripe.com",
+    "secret:read:stripe.*"
+  ],
+  "extensions": {
+    "paymentProvider": "./src/provider.ts"
+  },
+  "settingsSchema": "./src/settings.ts",
+  "dependencies": {
+    "@claudeshop/module-kit": "^0.1.0"
+  }
+}

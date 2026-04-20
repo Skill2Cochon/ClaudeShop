@@ -1,0 +1,40 @@
+{
+  "$schema": "https://schemas.anthropic.com/claude-code/mcp.schema.json",
+  "_comment": "Reference MCP server configuration for ClaudeShop. Paste the relevant entries into your Claude Code settings (either ~/.claude.json globally or project-local via .claude/settings.json).",
+  "mcpServers": {
+    "gitnexus": {
+      "command": "npx",
+      "args": ["-y", "gitnexus", "mcp"],
+      "description": "Code knowledge graph — blast radius before edits, callers/callees, process flows. Run `npx gitnexus analyze` once in the repo root before first use."
+    },
+    "claude-mem": {
+      "command": "npx",
+      "args": ["-y", "@thedotmack/claude-mem", "mcp"],
+      "description": "Session observation capture + vector recall. Stores observations in SQLite + Chroma; viewer at http://localhost:37777."
+    },
+    "basic-memory": {
+      "command": "uvx",
+      "args": ["basic-memory"],
+      "env": {
+        "BASIC_MEMORY_HOME": "./vault"
+      },
+      "description": "Local-first Markdown knowledge base. Writes to ./vault — fully Obsidian-compatible."
+    },
+    "mempalace": {
+      "command": "npx",
+      "args": ["-y", "mempalace", "mcp"],
+      "description": "L0-L3 palace memory — ~170-token boot, 96.6% retrieval for multi-hour sessions.",
+      "_optional": true
+    }
+  },
+  "_instructions": {
+    "register_all": "claude mcp add-from-file .claude/mcp.json",
+    "register_one": "claude mcp add gitnexus 'npx -y gitnexus mcp'",
+    "verify": "claude mcp list",
+    "remove": "claude mcp remove <name>"
+  },
+  "_recommended_extras": {
+    "graphify": "Install via pip: `pip install graphify && graphify install`. Not an MCP server — integrates via a PreToolUse hook.",
+    "agent-sdk": "npm i @anthropic-ai/claude-agent-sdk — use to script programmatic deploys."
+  }
+}

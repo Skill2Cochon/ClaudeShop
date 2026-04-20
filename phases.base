@@ -1,0 +1,37 @@
+filters:
+  and:
+    - taggedWith(file.tags, "phase")
+formulas:
+  phase_num: |
+    if(contains(file.tags, "phase/1"), "1",
+    if(contains(file.tags, "phase/2"), "2",
+    if(contains(file.tags, "phase/3"), "3",
+    if(contains(file.tags, "phase/4"), "4",
+    if(contains(file.tags, "phase/5"), "5",
+    if(contains(file.tags, "phase/6"), "6", "-"))))))
+properties:
+  note.status:
+    displayName: Status
+  note.started:
+    displayName: Started
+views:
+  - type: table
+    name: All phases
+    order:
+      - file.name
+      - formula.phase_num
+      - note.status
+      - note.started
+    sort:
+      - property: formula.phase_num
+        direction: ASC
+  - type: table
+    name: Active only
+    filters:
+      or:
+        - note.status == "in-progress"
+        - note.status == "active"
+    order:
+      - file.name
+      - formula.phase_num
+      - note.status

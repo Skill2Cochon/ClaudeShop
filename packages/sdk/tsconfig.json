@@ -1,0 +1,9 @@
+{
+  "extends": "../config/tsconfig-node.json",
+  "compilerOptions": {
+    "composite": false,
+    "noEmit": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["dist", "node_modules", "generated", "**/*.test.ts"]
+}

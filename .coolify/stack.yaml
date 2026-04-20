@@ -1,0 +1,127 @@
+# Coolify-typed deploy manifest for ClaudeShop
+# -----------------------------------------------------------------------------
+# Attach this file to your Coolify Docker-Compose resource. Coolify reads the
+# `secrets.required` list and blocks deploy if any are missing. Domains and
+# resource limits come from here so the UI stays in sync with git.
+# -----------------------------------------------------------------------------
+name: claudeshop
+version: 1
+description: ClaudeShop production stack (API, Admin, Storefront, Worker + data tier)
+
+compose:
+  file: docker-compose.prod.yml
+  env_file: .env.production
+
+domains:
+  - service: storefront
+    host: shop.example.com
+    port: 3000
+    tls: letsencrypt
+  - service: admin
+    host: admin.shop.example.com
+    port: 3002
+    tls: letsencrypt
+  - service: api
+    host: api.shop.example.com
+    port: 3001
+    tls: letsencrypt
+
+resources:
+  api:
+    memory_limit: 1024m
+    memory_reservation: 512m
+    cpus: 1.0
+  worker:
+    memory_limit: 768m
+    memory_reservation: 256m
+    cpus: 0.5
+  admin:
+    memory_limit: 512m
+    memory_reservation: 256m
+    cpus: 0.5
+  storefront:
+    memory_limit: 768m
+    memory_reservation: 384m
+    cpus: 0.75
+  postgres:
+    memory_limit: 2048m
+    memory_reservation: 1024m
+    cpus: 1.5
+  redis:
+    memory_limit: 1024m
+    memory_reservation: 256m
+  meilisearch:
+    memory_limit: 1024m
+    memory_reservation: 256m
+  minio:
+    memory_limit: 512m
+
+secrets:
+  # Coolify blocks deploy if any entry here is missing from the secret manager.
+  required:
+    - AUTH_SECRET
+    - POSTGRES_PASSWORD
+    - REDIS_PASSWORD
+    - MEILISEARCH_MASTER_KEY
+    - MINIO_ACCESS_KEY
+    - MINIO_SECRET_KEY
+    - STRIPE_SECRET_KEY
+    - STRIPE_PUBLISHABLE_KEY
+    - STRIPE_WEBHOOK_SECRET
+    - ANTHROPIC_API_KEY
+    - SMTP_HOST
+    - SMTP_USER
+    - SMTP_PASS
+  optional:
+    - OTEL_EXPORTER_OTLP_ENDPOINT
+    - MOLLIE_API_KEY
+    - SHIPPO_API_KEY
+
+volumes:
+  backup:
+    - postgres-data
+    - minio-data
+    - meilisearch-data
+
+health:
+  - service: api
+    path: /health
+    expected: 200
+    interval: 15s
+  - service: admin
+    path: /api/health
+    expected: 200
+    interval: 30s
+  - service: storefront
+    path: /api/health
+    expected: 200
+    interval: 30s
+
+hooks:
+  pre_deploy:
+    # Validated by the api container before taking traffic.
+    - command: pnpm --filter @claudeshop/db migrate:deploy
+      service: api
+      timeout: 120s
+  post_deploy:
+    # Warms the Meilisearch index after a catalog migration (optional).
+    - command: node apps/api/dist/scripts/reindex-search.js
+      service: api
+      timeout: 600s
+      optional: true
+
+rollback:
+  strategy: previous_image
+  trigger:
+    health_failures: 3
+    window: 5m
+
+# The `edge` network in docker-compose.prod.yml must be attached to the Coolify
+# Traefik network. Override via:
+#   networks:
+#     edge:
+#       external: true
+#       name: coolify
+networks:
+  edge:
+    external: coolify

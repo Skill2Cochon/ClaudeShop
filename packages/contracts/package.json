@@ -1,0 +1,48 @@
+{
+  "name": "@claudeshop/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Zod schemas — single source of truth for all API contracts",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./product": "./src/product/index.ts",
+    "./customer": "./src/customer/index.ts",
+    "./order": "./src/order/index.ts",
+    "./cart": "./src/cart/index.ts",
+    "./category": "./src/category/index.ts",
+    "./common": "./src/common/index.ts",
+    "./events": "./src/events/index.ts",
+    "./auth": "./src/auth/index.ts",
+    "./tenant-settings": "./src/tenant-settings/index.ts",
+    "./page": "./src/page/index.ts",
+    "./promotion": "./src/promotion/index.ts",
+    "./erp": "./src/erp/index.ts",
+    "./checkout": "./src/checkout/index.ts",
+    "./crm": "./src/crm/index.ts",
+    "./webhook": "./src/webhook/index.ts",
+    "./review": "./src/review/index.ts"
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "dev": "tsc --build --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@claudeshop/config": "workspace:*",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

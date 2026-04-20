@@ -1,0 +1,49 @@
+{
+  "name": "@claudeshop/db",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Prisma 6 ORM — multi-file schema, migrations, RLS helpers",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "prisma"
+  ],
+  "scripts": {
+    "generate": "prisma generate",
+    "migrate:dev": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
+    "push": "prisma db push",
+    "studio": "prisma studio",
+    "seed": "tsx src/seed.ts",
+    "build": "tsc --build",
+    "dev": "tsc --build --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "clean": "rm -rf dist .turbo generated"
+  },
+  "prisma": {
+    "schema": "prisma/schema.prisma",
+    "seed": "tsx src/seed.ts"
+  },
+  "dependencies": {
+    "@claudeshop/contracts": "workspace:*",
+    "@prisma/client": "catalog:",
+    "bcryptjs": "^3.0.3"
+  },
+  "devDependencies": {
+    "@claudeshop/config": "workspace:*",
+    "prisma": "catalog:",
+    "tsx": "^4.19.2",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

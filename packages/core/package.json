@@ -1,0 +1,37 @@
+{
+  "name": "@claudeshop/core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Domain entities and use-cases (hexagonal, pure TS — no framework)",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "dev": "tsc --build --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "@claudeshop/contracts": "workspace:*",
+    "@claudeshop/errors": "workspace:*",
+    "@claudeshop/events": "workspace:*",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@claudeshop/config": "workspace:*",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

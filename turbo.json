@@ -1,0 +1,79 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
+  "globalDependencies": [
+    ".env",
+    "tsconfig.base.json"
+  ],
+  "globalEnv": [
+    "NODE_ENV",
+    "DATABASE_URL",
+    "REDIS_URL",
+    "MEILISEARCH_URL"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": [
+        "^build",
+        "^db:generate"
+      ],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**",
+        "build/**"
+      ],
+      "env": [
+        "NODE_ENV"
+      ]
+    },
+    "dev": {
+      "persistent": true,
+      "cache": false,
+      "dependsOn": [
+        "^db:generate"
+      ]
+    },
+    "lint": {
+      "outputs": []
+    },
+    "typecheck": {
+      "dependsOn": [
+        "^build",
+        "^db:generate"
+      ],
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "coverage/**"
+      ]
+    },
+    "test:e2e": {
+      "dependsOn": [
+        "^build"
+      ],
+      "cache": false
+    },
+    "clean": {
+      "cache": false
+    },
+    "db:generate": {
+      "cache": true,
+      "inputs": [
+        "prisma/**/*.prisma"
+      ],
+      "outputs": [
+        "generated/**",
+        "node_modules/.prisma/**"
+      ]
+    },
+    "db:migrate:dev": {
+      "cache": false,
+      "persistent": false
+    }
+  }
+}

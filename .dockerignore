@@ -1,0 +1,61 @@
+# Monorepo-wide Docker build context exclusions.
+# Keeps the build context under ~20 MB on a fresh clone.
+
+# Node artefacts
+node_modules
+**/node_modules
+.pnpm-store
+.yarn
+.npm
+
+# Build outputs
+**/.next
+**/.turbo
+**/dist
+**/build
+**/out
+**/coverage
+
+# TypeScript incremental caches
+**/*.tsbuildinfo
+
+# Prisma generated client (regenerated in-image)
+packages/db/generated
+packages/db/node_modules/.prisma
+
+# Local env + secrets
+.env
+.env.*
+!.env.example
+!.env.production.example
+
+# Git + editor
+.git
+.gitignore
+.github
+.vscode
+.idea
+**/.DS_Store
+
+# Docs + vault (not needed in runtime image)
+_meta
+docs
+*.canvas
+*.base
+.obsidian
+
+# Tests + fixtures
+**/*.test.ts
+**/*.spec.ts
+**/e2e
+**/playwright-report
+**/test-results
+
+# Logs
+**/*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+
+# OS
+Thumbs.db

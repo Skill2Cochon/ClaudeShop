@@ -1,0 +1,48 @@
+{
+  "name": "claudeshop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The modern commerce CMS — PrestaShop v150 under steroids for 2026",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\" --ignore-path .gitignore",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\" --ignore-path .gitignore",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "db:generate": "pnpm --filter @claudeshop/db generate",
+    "db:migrate": "pnpm --filter @claudeshop/db migrate:dev",
+    "db:push": "pnpm --filter @claudeshop/db push",
+    "db:studio": "pnpm --filter @claudeshop/db studio",
+    "db:seed": "pnpm --filter @claudeshop/db seed",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "docker:reset": "docker compose down -v && docker compose up -d"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "prettier": "^3.4.0",
+    "prettier-plugin-tailwindcss": "^0.6.9",
+    "turbo": "^2.3.0",
+    "typescript": "^5.6.3"
+  },
+  "prettier": {
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "printWidth": 100,
+    "tabWidth": 2,
+    "plugins": [
+      "prettier-plugin-tailwindcss"
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schemas.anthropic.com/claude-code/marketplace.schema.json",
+  "name": "claudeshop",
+  "version": "1.0.0",
+  "description": "ClaudeShop — the Claude-native commerce OS. Inspired by PrestaShop, rebuilt for 2026 with Node 22 + Fastify + Prisma 6 + Next.js 16, a native Claude copilot in the admin, and a typed plugin system.",
+  "owner": "Skill2Cochon",
+  "homepage": "https://github.com/Skill2Cochon/ClaudeShop",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Skill2Cochon/ClaudeShop.git"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "ecommerce",
+    "cms",
+    "b2b",
+    "prestashop-alternative",
+    "claude-native",
+    "mcp",
+    "multi-tenant",
+    "obsidian-vault"
+  ],
+  "plugins": [
+    {
+      "name": "claudeshop-install",
+      "path": "plugins/claudeshop-install",
+      "description": "Triggers when a user asks Claude to install, bootstrap, or deploy ClaudeShop. Clones the repo if needed, detects the target environment, runs the phased deploy playbook."
+    }
+  ]
+}

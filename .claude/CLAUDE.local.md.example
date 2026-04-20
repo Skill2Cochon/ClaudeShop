@@ -1,0 +1,40 @@
+---
+title: CLAUDE.local.md — Template
+tags:
+  - type/context
+  - scope/private
+---
+
+# CLAUDE.local.md — Template
+
+> [!warning] This file overrides CLAUDE.md and is gitignored.
+> Use it to attach **your** private context to a local clone — personal conventions, your infra topology, credentials references (not values), the parent stack you integrate with. Nothing here is shipped to the public repo.
+
+Copy this file to `.claude/CLAUDE.local.md` and edit as you see fit. Claude Code loads both `CLAUDE.md` (public) and `CLAUDE.local.md` (private) — the local one takes precedence on overlaps.
+
+## My Infrastructure
+
+| Machine | Role | Where |
+|---|---|---|
+| — | — | — |
+
+## Parent Stack / Registry
+
+- Parent project context file :: `<path>`
+- Project registry :: `<path>`
+
+## Personal Conventions
+
+- Git remote alias :: `<origin | gitea | fork>`
+- Preferred editor :: `<vscode | vim | zed>`
+- Shell :: `<bash | zsh | fish | pwsh>`
+
+## Credential References (NAMES ONLY — never values)
+
+- Stripe live key :: stored in `<secret manager path>`
+- Anthropic API key :: stored in `<secret manager path>`
+- Postgres root :: stored in `<secret manager path>`
+
+## Notes Claude should remember
+
+Add anything you want Claude to treat as permanent context for this clone — e.g. "prefer French replies", "always run `gitnexus_impact` even on trivial edits", "default deploy target is my KVM-at-home".

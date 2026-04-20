@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import './tokens.css';
+
+@layer base {
+  * {
+    border-color: hsl(var(--color-border));
+  }
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background-color: hsl(var(--color-bg));
+    color: hsl(var(--color-fg));
+    min-height: 100vh;
+  }
+}

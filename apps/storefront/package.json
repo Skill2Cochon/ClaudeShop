@@ -1,0 +1,42 @@
+{
+  "name": "@claudeshop/storefront",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ClaudeShop public storefront — Next.js 16 App Router (B2C + B2B)",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --turbopack --port 3000",
+    "build": "next build",
+    "start": "next start --port 3000",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install chromium",
+    "test:e2e:ui": "playwright test --ui",
+    "clean": "rm -rf .next .turbo"
+  },
+  "dependencies": {
+    "@claudeshop/contracts": "workspace:*",
+    "@claudeshop/sdk": "workspace:*",
+    "@claudeshop/ui": "workspace:*",
+    "iron-session": "^8.0.4",
+    "marked": "^18.0.2",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@claudeshop/config": "workspace:*",
+    "@playwright/test": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "autoprefixer": "catalog:",
+    "postcss": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

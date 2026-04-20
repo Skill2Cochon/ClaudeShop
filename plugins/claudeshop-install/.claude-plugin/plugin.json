@@ -1,0 +1,58 @@
+{
+  "$schema": "https://schemas.anthropic.com/claude-code/plugin.schema.json",
+  "name": "claudeshop-install",
+  "version": "1.0.0",
+  "description": "Install and deploy ClaudeShop into any environment (local dev, generic Docker host, Coolify, VPS).",
+  "author": {
+    "name": "ClaudeShop Maintainers",
+    "url": "https://github.com/Skill2Cochon/ClaudeShop"
+  },
+  "license": "Apache-2.0",
+  "skills": [
+    "./skills/claudeshop-install"
+  ],
+  "commands": [
+    "./commands/install.md",
+    "./commands/bootstrap.md",
+    "./commands/deploy.md"
+  ],
+  "mcp_servers": {
+    "gitnexus": {
+      "command": "npx",
+      "args": ["-y", "gitnexus", "mcp"],
+      "description": "Code knowledge graph — blast radius before every edit"
+    },
+    "claude-mem": {
+      "command": "npx",
+      "args": ["-y", "@thedotmack/claude-mem", "mcp"],
+      "description": "Session observation capture + vector recall"
+    },
+    "basic-memory": {
+      "command": "uvx",
+      "args": ["basic-memory"],
+      "env": {
+        "BASIC_MEMORY_HOME": "${repoRoot}/.basic-memory"
+      },
+      "description": "Local-first markdown knowledge base (Obsidian-compatible)"
+    },
+    "mempalace": {
+      "command": "npx",
+      "args": ["-y", "mempalace", "mcp"],
+      "description": "L0-L3 palace memory for multi-hour deploy sessions",
+      "optional": true
+    }
+  },
+  "recommended_skills": [
+    "obsidian-markdown",
+    "json-canvas",
+    "obsidian-bases",
+    "docker-patterns",
+    "postgres-patterns",
+    "security-review"
+  ],
+  "requires": {
+    "node": ">=22.0.0",
+    "pnpm": ">=10.0.0",
+    "docker": ">=24"
+  }
+}

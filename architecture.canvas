@@ -1,0 +1,348 @@
+{
+  "nodes": [
+    {
+      "id": "g-entry",
+      "type": "group",
+      "label": "Entry Points",
+      "x": -1400,
+      "y": -700,
+      "width": 900,
+      "height": 200,
+      "color": "4"
+    },
+    {
+      "id": "users",
+      "type": "text",
+      "text": "### Users\n- B2C shoppers\n- B2B buyers\n- Merchants (admin)",
+      "x": -1350,
+      "y": -650,
+      "width": 250,
+      "height": 120
+    },
+    {
+      "id": "pixel",
+      "type": "text",
+      "text": "### Admin device\nMobile / desktop command channel (Telegram, Slack, etc. — optional)",
+      "x": -1050,
+      "y": -650,
+      "width": 250,
+      "height": 120
+    },
+    {
+      "id": "web",
+      "type": "text",
+      "text": "### Web browser\nstorefront.claudeshop.dev\nadmin.claudeshop.dev",
+      "x": -750,
+      "y": -650,
+      "width": 250,
+      "height": 120
+    },
+
+    {
+      "id": "g-services-host",
+      "type": "group",
+      "label": "Services Host — edge proxy + workflow + cache (1-2 vCPU / 4 GB)",
+      "x": -1400,
+      "y": -420,
+      "width": 900,
+      "height": 220,
+      "color": "5"
+    },
+    {
+      "id": "traefik",
+      "type": "text",
+      "text": "### Traefik\nTLS termination\nSubdomain routing",
+      "x": -1350,
+      "y": -370,
+      "width": 250,
+      "height": 140
+    },
+    {
+      "id": "n8n",
+      "type": "text",
+      "text": "### n8n\nWorkflow orchestration\nOptional dispatcher for cross-tool automations",
+      "x": -1050,
+      "y": -370,
+      "width": 250,
+      "height": 140
+    },
+    {
+      "id": "redis",
+      "type": "text",
+      "text": "### Redis 7\n- Sessions\n- Query cache\n- BullMQ queues\n- Rate limit",
+      "x": -750,
+      "y": -370,
+      "width": 250,
+      "height": 140
+    },
+
+    {
+      "id": "g-apps",
+      "type": "group",
+      "label": "ClaudeShop Apps (Turborepo)",
+      "x": -400,
+      "y": -700,
+      "width": 1200,
+      "height": 450,
+      "color": "6"
+    },
+    {
+      "id": "storefront",
+      "type": "file",
+      "file": "apps/storefront/package.json",
+      "x": -350,
+      "y": -640,
+      "width": 300,
+      "height": 150
+    },
+    {
+      "id": "admin",
+      "type": "file",
+      "file": "apps/admin/package.json",
+      "x": 0,
+      "y": -640,
+      "width": 300,
+      "height": 150
+    },
+    {
+      "id": "api",
+      "type": "file",
+      "file": "apps/api/package.json",
+      "x": 350,
+      "y": -640,
+      "width": 400,
+      "height": 150
+    },
+    {
+      "id": "modules",
+      "type": "text",
+      "text": "### modules/\n- payment-stripe (Phase 3)\n- payment-mollie (Phase 3)\n- shipping-shippo (Phase 3)\n- ai-recommendations (Phase 4)\n- analytics-plausible (Phase 5)\n\n3 isolation tiers:\nin-process / worker / sandbox",
+      "x": -350,
+      "y": -450,
+      "width": 650,
+      "height": 180
+    },
+    {
+      "id": "module-kit",
+      "type": "file",
+      "file": "packages/module-kit/src/index.ts",
+      "x": 350,
+      "y": -450,
+      "width": 400,
+      "height": 180
+    },
+
+    {
+      "id": "g-pkgs",
+      "type": "group",
+      "label": "Shared Packages",
+      "x": -1400,
+      "y": -170,
+      "width": 2200,
+      "height": 200,
+      "color": "3"
+    },
+    {
+      "id": "contracts",
+      "type": "file",
+      "file": "packages/contracts/src/index.ts",
+      "x": -1350,
+      "y": -110,
+      "width": 300,
+      "height": 120
+    },
+    {
+      "id": "core",
+      "type": "file",
+      "file": "packages/core/src/index.ts",
+      "x": -1000,
+      "y": -110,
+      "width": 300,
+      "height": 120
+    },
+    {
+      "id": "db",
+      "type": "file",
+      "file": "packages/db/prisma/schema.prisma",
+      "x": -650,
+      "y": -110,
+      "width": 300,
+      "height": 120
+    },
+    {
+      "id": "events",
+      "type": "file",
+      "file": "packages/events/src/bus.ts",
+      "x": -300,
+      "y": -110,
+      "width": 300,
+      "height": 120
+    },
+    {
+      "id": "ui",
+      "type": "file",
+      "file": "packages/ui/src/index.ts",
+      "x": 50,
+      "y": -110,
+      "width": 300,
+      "height": 120
+    },
+    {
+      "id": "sdk",
+      "type": "file",
+      "file": "packages/sdk/src/index.ts",
+      "x": 400,
+      "y": -110,
+      "width": 300,
+      "height": 120
+    },
+
+    {
+      "id": "g-data-host",
+      "type": "group",
+      "label": "Data Host — Postgres + object store (1-2 vCPU / 4-8 GB)",
+      "x": -1400,
+      "y": 100,
+      "width": 900,
+      "height": 200,
+      "color": "2"
+    },
+    {
+      "id": "postgres",
+      "type": "text",
+      "text": "### PostgreSQL 16\n+ pgvector, ltree, pg_trgm\n+ Row-Level Security\n+ PgBouncer pool",
+      "x": -1350,
+      "y": 150,
+      "width": 350,
+      "height": 120
+    },
+    {
+      "id": "minio",
+      "type": "text",
+      "text": "### MinIO\nS3-compatible object storage\nMedia + Turborepo cache",
+      "x": -950,
+      "y": 150,
+      "width": 350,
+      "height": 120
+    },
+
+    {
+      "id": "g-deploy-host",
+      "type": "group",
+      "label": "Deploy Host — Coolify + uptime monitoring (2 vCPU / 8 GB)",
+      "x": -400,
+      "y": 100,
+      "width": 900,
+      "height": 200,
+      "color": "1"
+    },
+    {
+      "id": "coolify",
+      "type": "text",
+      "text": "### Coolify\nDeploy platform\nSecret manager\nGit CI/CD target (GitHub / Gitea / GitLab)",
+      "x": -350,
+      "y": 150,
+      "width": 350,
+      "height": 120
+    },
+    {
+      "id": "uptime-kuma",
+      "type": "text",
+      "text": "### Uptime Kuma\n/readyz probes every 30s\nDead-man's switch",
+      "x": 50,
+      "y": 150,
+      "width": 350,
+      "height": 120
+    },
+
+    {
+      "id": "g-ai-host",
+      "type": "group",
+      "label": "AI Host — LLM inference + sandbox (4 vCPU / 16 GB)",
+      "x": 550,
+      "y": 100,
+      "width": 500,
+      "height": 200,
+      "color": "6"
+    },
+    {
+      "id": "claude-api",
+      "type": "text",
+      "text": "### Claude API\nSonnet 4.7 + Opus 4.7\n- Semantic search (pgvector embeds)\n- MCP admin assistant\n- Auto-gen copy\n- Recommendations",
+      "x": 600,
+      "y": 150,
+      "width": 400,
+      "height": 120
+    },
+
+    {
+      "id": "meilisearch",
+      "type": "text",
+      "text": "### Meilisearch 1.x\nFaceted + typo-tolerant search\nHybrid BM25 + pgvector",
+      "x": -500,
+      "y": 370,
+      "width": 400,
+      "height": 100
+    },
+
+    {
+      "id": "g-legend",
+      "type": "group",
+      "label": "Legend",
+      "x": -1400,
+      "y": 370,
+      "width": 800,
+      "height": 150,
+      "color": "4"
+    },
+    {
+      "id": "legend",
+      "type": "text",
+      "text": "**Entry**   **Services**   **Apps**   **Data**   **Staging**   **AI**\n\nArrow = dataflow · Dotted = async (BullMQ) · Solid = sync HTTP/SQL",
+      "x": -1350,
+      "y": 420,
+      "width": 700,
+      "height": 80
+    }
+  ],
+  "edges": [
+    { "id": "e-users-traefik", "fromNode": "users", "toNode": "traefik", "label": "HTTPS" },
+    { "id": "e-pixel-n8n", "fromNode": "pixel", "toNode": "n8n", "label": "Telegram" },
+    { "id": "e-web-traefik", "fromNode": "web", "toNode": "traefik", "label": "HTTPS" },
+
+    { "id": "e-traefik-storefront", "fromNode": "traefik", "toNode": "storefront" },
+    { "id": "e-traefik-admin", "fromNode": "traefik", "toNode": "admin" },
+    { "id": "e-traefik-api", "fromNode": "traefik", "toNode": "api" },
+    { "id": "e-n8n-api", "fromNode": "n8n", "toNode": "api", "label": "webhooks" },
+
+    { "id": "e-storefront-sdk", "fromNode": "storefront", "toNode": "sdk", "label": "imports" },
+    { "id": "e-admin-sdk", "fromNode": "admin", "toNode": "sdk", "label": "imports" },
+    { "id": "e-storefront-ui", "fromNode": "storefront", "toNode": "ui" },
+    { "id": "e-admin-ui", "fromNode": "admin", "toNode": "ui" },
+    { "id": "e-sdk-contracts", "fromNode": "sdk", "toNode": "contracts" },
+
+    { "id": "e-api-core", "fromNode": "api", "toNode": "core" },
+    { "id": "e-api-db", "fromNode": "api", "toNode": "db" },
+    { "id": "e-api-events", "fromNode": "api", "toNode": "events" },
+    { "id": "e-api-contracts", "fromNode": "api", "toNode": "contracts" },
+    { "id": "e-core-contracts", "fromNode": "core", "toNode": "contracts" },
+
+    { "id": "e-api-modules", "fromNode": "api", "toNode": "modules", "label": "registers" },
+    { "id": "e-modules-mkit", "fromNode": "modules", "toNode": "module-kit" },
+    { "id": "e-modules-events", "fromNode": "modules", "toNode": "events", "label": "emit/subscribe" },
+
+    { "id": "e-db-postgres", "fromNode": "db", "toNode": "postgres", "label": "Prisma" },
+    { "id": "e-api-redis", "fromNode": "api", "toNode": "redis", "label": "cache+queue" },
+    { "id": "e-api-meilisearch", "fromNode": "api", "toNode": "meilisearch", "label": "index+query" },
+    { "id": "e-api-minio", "fromNode": "api", "toNode": "minio", "label": "media" },
+
+    { "id": "e-api-claude", "fromNode": "api", "toNode": "claude-api", "label": "MCP" },
+    { "id": "e-claude-postgres", "fromNode": "claude-api", "toNode": "postgres", "label": "pgvector" },
+
+    { "id": "e-coolify-api", "fromNode": "coolify", "toNode": "api", "label": "deploy" },
+    { "id": "e-coolify-storefront", "fromNode": "coolify", "toNode": "storefront", "label": "deploy" },
+    { "id": "e-coolify-admin", "fromNode": "coolify", "toNode": "admin", "label": "deploy" },
+    { "id": "e-uptime-api", "fromNode": "uptime-kuma", "toNode": "api", "label": "/readyz" }
+  ],
+  "metadata": {}
+}

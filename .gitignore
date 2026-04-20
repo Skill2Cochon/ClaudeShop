@@ -1,0 +1,81 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+.next/
+.turbo/
+out/
+coverage/
+
+# Generated
+generated/
+*.tsbuildinfo
+
+# Prisma
+packages/db/generated/
+packages/db/node_modules/
+
+# Environment — never commit real secrets
+.env
+.env.local
+.env.*.local
+.env.production
+.env.staging
+!.env.example
+!.env.production.example
+
+# Local Claude overrides (developer's private context — not checked in)
+.claude/CLAUDE.local.md
+.claude/local/
+CLAUDE.local.md
+
+# Local handoff / session drafts
+HANDOFF.local.md
+.handoff/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Testing
+playwright-report/
+playwright/.cache/
+test-results/
+
+# Storybook
+storybook-static/
+
+# Docker volumes (local dev only)
+.docker-data/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Obsidian — user-specific state (keep the vault metadata, ignore ephemeral state)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache
+.obsidian/plugins/*/data.json
+
+# GitNexus local index
+.gitnexus/
+
+# Reference repos (cloned outside; safeguard in case someone symlinks inside)
+.references/

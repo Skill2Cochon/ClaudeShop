@@ -1,0 +1,38 @@
+{
+  "name": "@claudeshop/module-payment-stripe",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ClaudeShop payment module — Stripe PaymentIntents + webhook verification",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./claudeshop.json": "./claudeshop.json"
+  },
+  "files": [
+    "src",
+    "claudeshop.json"
+  ],
+  "scripts": {
+    "build": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "clean": "rm -rf .turbo"
+  },
+  "dependencies": {
+    "@claudeshop/contracts": "workspace:*",
+    "@claudeshop/core": "workspace:*",
+    "@claudeshop/errors": "workspace:*",
+    "@claudeshop/module-kit": "workspace:*",
+    "stripe": "^18.0.0",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@claudeshop/config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

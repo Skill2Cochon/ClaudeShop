@@ -1,0 +1,39 @@
+filters:
+  and:
+    - taggedWith(file.tags, "risk")
+formulas:
+  severity: |
+    if(contains(file.tags, "risk/critical"), "Critical",
+    if(contains(file.tags, "risk/high"), "High",
+    if(contains(file.tags, "risk/medium"), "Medium",
+    if(contains(file.tags, "risk/low"), "Low", "-"))))
+  severity_rank: |
+    if(contains(file.tags, "risk/critical"), 1,
+    if(contains(file.tags, "risk/high"), 2,
+    if(contains(file.tags, "risk/medium"), 3,
+    if(contains(file.tags, "risk/low"), 4, 5))))
+properties:
+  note.mitigation:
+    displayName: Mitigation
+  note.status:
+    displayName: Status
+views:
+  - type: table
+    name: All risks (by severity)
+    order:
+      - file.name
+      - formula.severity
+      - note.mitigation
+      - note.status
+    sort:
+      - property: formula.severity_rank
+        direction: ASC
+  - type: table
+    name: Critical only
+    filters:
+      and:
+        - contains(file.tags, "risk/critical")
+    order:
+      - file.name
+      - note.mitigation
+      - note.status

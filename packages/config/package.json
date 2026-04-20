@@ -1,0 +1,30 @@
+{
+  "name": "@claudeshop/config",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Shared ESLint, TypeScript, and Tailwind configurations",
+  "type": "module",
+  "exports": {
+    "./eslint-base": "./eslint-base.js",
+    "./eslint-next": "./eslint-next.js",
+    "./tsconfig-base.json": "./tsconfig-base.json",
+    "./tsconfig-node.json": "./tsconfig-node.json",
+    "./tsconfig-next.json": "./tsconfig-next.json",
+    "./tailwind-preset": "./tailwind-preset.js"
+  },
+  "files": [
+    "*.js",
+    "*.json"
+  ],
+  "scripts": {
+    "lint": "echo \"no-op\"",
+    "typecheck": "echo \"no-op\"",
+    "test": "echo \"no-op\""
+  },
+  "devDependencies": {
+    "@eslint/js": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:"
+  }
+}

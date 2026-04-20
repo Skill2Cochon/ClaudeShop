@@ -1,0 +1,1012 @@
+// ClaudeShop — Prisma schema
+// Phase 2: expanded with Category, PriceSet, InventoryItem, Cart/CartItem, Metafield.
+//
+// Conventions:
+//   - cuid() IDs everywhere except AuditLog (time-sortable ulid via application).
+//   - Json columns for localized strings ({ en: "...", fr: "..." }) — validated via @claudeshop/contracts.
+//   - @@unique includes tenantId for tenant-scoped uniqueness.
+//   - RLS policies applied in migrations/*_rls/migration.sql.
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+  output          = "../generated/client"
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+  extensions = [pgvector(map: "vector"), pgcrypto, ltree, pg_trgm]
+}
+
+// ============================================================
+// Tenants
+// ============================================================
+
+enum TenantPlan {
+  FREE
+  PRO
+  BUSINESS
+  ENTERPRISE
+}
+
+model Tenant {
+  id        String     @id @default(cuid())
+  slug      String     @unique
+  name      String
+  plan      TenantPlan @default(FREE)
+  settings  Json       @default("{}")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  products   Product[]
+  categories Category[]
+  customers  Customer[]
+  carts      Cart[]
+  orders     Order[]
+
+  @@index([slug])
+}
+
+// ============================================================
+// Catalog — Category
+// ============================================================
+
+model Category {
+  id        String   @id @default(cuid())
+  tenantId  String
+  parentId  String?
+  slug      String
+  name      Json // { en: "...", fr: "..." }
+  position  Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant   Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  parent   Category?           @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children Category[]          @relation("CategoryTree")
+  products CategoryOnProduct[]
+
+  @@unique([tenantId, slug])
+  @@index([tenantId, parentId, position])
+}
+
+// ============================================================
+// Catalog — Product / Variant / PriceSet / Inventory
+// ============================================================
+
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum ProductType {
+  SIMPLE
+  VARIABLE
+  BUNDLE
+  DIGITAL
+  SUBSCRIPTION
+}
+
+model Product {
+  id          String        @id @default(cuid())
+  tenantId    String
+  slug        String
+  status      ProductStatus @default(DRAFT)
+  type        ProductType   @default(SIMPLE)
+  name        Json // { en: "...", fr: "..." }
+  description Json?
+  seo         Json?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  tenant     Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  variants   Variant[]
+  categories CategoryOnProduct[]
+  embedding  ProductEmbedding?
+  reviews    Review[]
+
+  @@unique([tenantId, slug])
+  @@index([tenantId, status, updatedAt(sort: Desc)])
+}
+
+model CategoryOnProduct {
+  productId  String
+  categoryId String
+
+  product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([productId, categoryId])
+  @@index([categoryId])
+}
+
+model Variant {
+  id        String   @id @default(cuid())
+  productId String
+  sku       String
+  barcode   String?
+  options   Json     @default("{}") // { color: "red", size: "M" }
+  weight    Decimal? @db.Decimal(10, 3)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  product    Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  priceSets  PriceSet[]
+  inventory  InventoryItem[]
+  cartItems  CartItem[]
+  orderLines OrderLine[]
+
+  @@unique([productId, sku])
+  @@index([productId])
+}
+
+model PriceSet {
+  id          String    @id @default(cuid())
+  variantId   String
+  currency    String    @db.Char(3)
+  amount      Decimal   @db.Decimal(12, 2)
+  channel     String    @default("default")
+  validFrom   DateTime?
+  validTo     DateTime?
+  taxIncluded Boolean   @default(false)
+
+  variant Variant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  @@unique([variantId, currency, channel])
+  @@index([variantId, currency])
+}
+
+model InventoryItem {
+  id           String @id @default(cuid())
+  variantId    String
+  locationId   String @default("default")
+  onHand       Int    @default(0)
+  reserved     Int    @default(0)
+  safetyStock  Int    @default(0)
+
+  variant Variant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  @@unique([variantId, locationId])
+  @@index([variantId])
+}
+
+// ============================================================
+// Customers
+// ============================================================
+
+enum CustomerGroup {
+  B2C
+  B2B
+  VIP
+}
+
+model Customer {
+  id               String        @id @default(cuid())
+  tenantId         String
+  email            String
+  phone            String?
+  firstName        String?
+  lastName         String?
+  group            CustomerGroup @default(B2C)
+  acceptsMarketing Boolean       @default(false)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  tenant Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  carts  Cart[]
+  orders Order[]
+
+  @@unique([tenantId, email])
+  @@index([tenantId, group])
+}
+
+// ============================================================
+// Cart
+// ============================================================
+
+enum CartStatus {
+  ACTIVE
+  ORDERED
+  ABANDONED
+  EXPIRED
+}
+
+model Cart {
+  id          String     @id @default(cuid())
+  tenantId    String
+  customerId  String?
+  anonymousId String?
+  currency    String     @db.Char(3)
+  status      CartStatus @default(ACTIVE)
+  expiresAt   DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  tenant   Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customer Customer?  @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  items    CartItem[]
+
+  @@index([tenantId, customerId])
+  @@index([tenantId, anonymousId])
+  @@index([tenantId, status, updatedAt(sort: Desc)])
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  cartId    String
+  variantId String
+  qty       Int
+  unitPrice Decimal  @db.Decimal(12, 2)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  variant Variant @relation(fields: [variantId], references: [id], onDelete: Restrict)
+
+  @@unique([cartId, variantId])
+  @@index([cartId])
+}
+
+// ============================================================
+// Orders
+// ============================================================
+
+enum OrderStatus {
+  DRAFT
+  PENDING_PAYMENT
+  PAID
+  FULFILLING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+model Order {
+  id             String      @id @default(cuid())
+  tenantId       String
+  number         String
+  customerId     String?
+  anonymousEmail String?
+  status         OrderStatus @default(DRAFT)
+  currency       String      @db.Char(3)
+  subtotal       Decimal     @db.Decimal(12, 2)
+  tax            Decimal     @default(0) @db.Decimal(12, 2)
+  discount       Decimal     @default(0) @db.Decimal(12, 2)
+  shipping       Decimal     @default(0) @db.Decimal(12, 2)
+  total          Decimal     @db.Decimal(12, 2)
+  placedAt       DateTime?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  tenant   Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customer Customer?   @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  lines    OrderLine[]
+
+  @@unique([tenantId, number])
+  @@index([tenantId, status, placedAt(sort: Desc)])
+  @@index([tenantId, customerId])
+}
+
+model OrderLine {
+  id          String  @id @default(cuid())
+  orderId     String
+  variantId   String
+  productName String
+  sku         String
+  qty         Int
+  unitPrice   Decimal @db.Decimal(12, 2)
+  subtotal    Decimal @db.Decimal(12, 2)
+  tax         Decimal @default(0) @db.Decimal(12, 2)
+  discount    Decimal @default(0) @db.Decimal(12, 2)
+  total       Decimal @db.Decimal(12, 2)
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  variant Variant @relation(fields: [variantId], references: [id], onDelete: Restrict)
+
+  @@index([orderId])
+  @@index([variantId])
+}
+
+// ============================================================
+// Extensibility — Metafield
+// ============================================================
+
+/// Metafield is polymorphic (ownerType points to any entity type by string).
+/// Prisma cannot express polymorphic FKs, so we validate ownerType/ownerId at
+/// the application layer via Zod contracts. Cascading delete is handled by
+/// explicit cleanup triggers defined in migrations.
+model Metafield {
+  id        String   @id @default(cuid())
+  ownerType String // "product" | "variant" | "customer" | "order" | ...
+  ownerId   String
+  namespace String
+  key       String
+  valueType String // "string" | "json" | "number" | ...
+  value     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([ownerType, ownerId, namespace, key])
+  @@index([ownerType, ownerId])
+}
+
+// ============================================================
+// Idempotency-Key store (Phase 2.4)
+// ============================================================
+
+/// Persistent Idempotency-Key records. Used by POST /v1/orders, /v1/payments,
+/// /v1/refunds. Cron sweeper cleans expired rows (expiresAt < now()).
+model IdempotencyKey {
+  id             String   @id @default(cuid())
+  tenantId       String
+  key            String
+  route          String // e.g. "POST /v1/orders"
+  requestHash    String // SHA-256 hex of canonical body
+  responseStatus Int
+  responseBody   Json
+  createdAt      DateTime @default(now())
+  expiresAt      DateTime
+
+  @@unique([tenantId, key, route])
+  @@index([expiresAt])
+  @@index([tenantId, createdAt(sort: Desc)])
+}
+
+// ============================================================
+// Payments (Phase 2.4)
+// ============================================================
+
+enum PaymentStatus {
+  PENDING
+  AUTHORIZED
+  CAPTURED
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+/// Payment records — one per PaymentProvider.createIntent() call.
+/// idempotencyKey is mandatory (typically "order:${orderId}:pay") and
+/// unique so retries yield the same row.
+model Payment {
+  id              String        @id @default(cuid())
+  tenantId        String
+  orderId         String
+  provider        String // "stripe" | "mollie" | ...
+  providerRef     String // PaymentIntent id at the provider
+  status          PaymentStatus @default(PENDING)
+  amount          Decimal       @db.Decimal(12, 2)
+  currency        String        @db.Char(3)
+  idempotencyKey  String        @unique
+  capturedAt      DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([tenantId, provider, providerRef])
+  @@index([tenantId, orderId])
+  @@index([tenantId, status, createdAt(sort: Desc)])
+}
+
+// ============================================================
+// Module installations (Phase 3.1)
+// ============================================================
+
+enum ModuleStatus {
+  INSTALLED
+  ACTIVE
+  DISABLED
+  FAILED
+}
+
+/// Per-tenant record of an installed module. `settings` stores Zod-validated
+/// configuration (encrypted at the application layer via the envelope
+/// encryption pattern — DEK per tenant, KEK in Coolify secret manager).
+///
+/// One row per (tenantId, moduleId). Installation/activation flows write
+/// this row; the ModuleRegistry reads it at boot and on every mutation.
+model ModuleInstallation {
+  id          String       @id @default(cuid())
+  tenantId    String
+  moduleId    String // "@claudeshop/payment-stripe"
+  version     String
+  status      ModuleStatus @default(INSTALLED)
+  settings    Json         @default("{}")
+  lastError   String?
+  installedAt DateTime     @default(now())
+  activatedAt DateTime?
+  updatedAt   DateTime     @updatedAt
+
+  @@unique([tenantId, moduleId])
+  @@index([tenantId, status])
+  @@index([moduleId, status])
+}
+
+// ============================================================
+// Webhook replay protection (Phase 2.6)
+// ============================================================
+
+/// Records every webhook event id ever processed. Insert-only, unique on
+/// (provider, eventId) so duplicate deliveries from the PSP are detected
+/// at the DB layer and short-circuited by the webhook handler.
+model WebhookEvent {
+  id          String   @id @default(cuid())
+  tenantId    String
+  provider    String // "stripe" | "mollie" | ...
+  eventId     String // provider-assigned unique id
+  eventType   String // "payment_intent.succeeded", ...
+  orderId     String?
+  processedAt DateTime @default(now())
+
+  @@unique([provider, eventId])
+  @@index([tenantId, processedAt(sort: Desc)])
+  @@index([orderId])
+}
+
+// ============================================================
+// Reviews (Phase 18) — customer ratings on products
+// ============================================================
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+/// Customer-authored product review. One review per (customer, product) —
+/// re-submitting from /account replaces the prior text + status. Moderators
+/// flip status from PENDING → APPROVED/REJECTED via the admin queue.
+model Review {
+  id          String       @id @default(cuid())
+  tenantId    String
+  productId   String
+  customerId  String?
+  authUserId  String?
+  /// 1..5 stars
+  rating      Int
+  title       String?
+  body        String?
+  status      ReviewStatus @default(PENDING)
+  authorName  String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  approvedAt  DateTime?
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, productId, authorName])
+  @@index([tenantId, productId, status])
+  @@index([tenantId, status, createdAt(sort: Desc)])
+}
+
+// ============================================================
+// Outbound webhooks (Phase 14) — merchant-side integrations
+// ============================================================
+
+/// A merchant's webhook endpoint. ClaudeShop POSTs HMAC-signed JSON to
+/// `url` for every event in `events`. `secret` is used to compute the
+/// `X-ClaudeShop-Signature` header.
+model WebhookSubscription {
+  id        String   @id @default(cuid())
+  tenantId  String
+  url       String
+  secret    String
+  /// JSON array of event names (e.g. ["order.placed", "payment.captured"]).
+  events    Json
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deliveries WebhookDelivery[]
+
+  @@index([tenantId, isActive])
+}
+
+enum WebhookDeliveryStatus {
+  PENDING
+  DELIVERED
+  FAILED
+}
+
+/// One row per (subscription, event) attempt. INSERT-only after the first
+/// attempt — retries flip status + bump attemptCount, never duplicate the
+/// row. The `payload` snapshot makes after-the-fact debugging trivial.
+model WebhookDelivery {
+  id             String                @id @default(cuid())
+  tenantId       String
+  subscriptionId String
+  eventType      String
+  eventId        String
+  payload        Json
+  status         WebhookDeliveryStatus @default(PENDING)
+  attemptCount   Int                   @default(0)
+  lastAttemptAt  DateTime?
+  deliveredAt    DateTime?
+  responseStatus Int?
+  responseBody   String?
+  errorMessage   String?
+  createdAt      DateTime              @default(now())
+
+  subscription WebhookSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@unique([subscriptionId, eventId])
+  @@index([tenantId, status, createdAt(sort: Desc)])
+  @@index([tenantId, eventType, createdAt(sort: Desc)])
+}
+
+// ============================================================
+// CRM (Phase 11) — segments + email campaigns
+// ============================================================
+
+/// Merchant-defined customer segment. `rules` is a JSON object evaluated by
+/// the application layer (no SQL injection from rule storage). Examples:
+///   { customerGroup: 'B2B' }
+///   { hasOrdered: true, minLifetimeValueCents: 10000 }
+/// `customerCount` is denormalised for fast list rendering and refreshed
+/// when members are recomputed.
+model CustomerSegment {
+  id            String    @id @default(cuid())
+  tenantId      String
+  name          String
+  description   String?
+  rules         Json      @default("{}")
+  customerCount Int       @default(0)
+  refreshedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  campaigns EmailCampaign[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId])
+}
+
+enum EmailCampaignStatus {
+  DRAFT
+  SCHEDULED
+  SENDING
+  SENT
+  FAILED
+  CANCELLED
+}
+
+/// Email campaign drafted by the merchant. Phase 11 ships DRAFT + SEND with
+/// a stub provider that records intent without hitting any SMTP/API. Phase
+/// 11.1 adds Resend / SES adapters.
+model EmailCampaign {
+  id          String              @id @default(cuid())
+  tenantId    String
+  name        String
+  subject     String
+  bodyMd      String
+  segmentId   String?
+  status      EmailCampaignStatus @default(DRAFT)
+  scheduledAt DateTime?
+  sentAt      DateTime?
+  sentCount   Int                 @default(0)
+  failedCount Int                 @default(0)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  segment CustomerSegment? @relation(fields: [segmentId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, status, scheduledAt])
+  @@index([tenantId, sentAt(sort: Desc)])
+}
+
+// ============================================================
+// Tax + shipping (Phase 8) — region-based rates for checkout
+// ============================================================
+
+/// Tax rate applied at checkout based on the destination address. Selection
+/// rule (highest priority wins): exact countryCode + regionCode + postcode
+/// pattern match → countryCode + regionCode → countryCode only. Stored as
+/// basis points (0..10000 = 0.00%..100.00%) to avoid float drift.
+model TaxRate {
+  id              String   @id @default(cuid())
+  tenantId        String
+  name            String
+  countryCode     String   @db.Char(2)
+  regionCode      String?
+  postcodePattern String?
+  rateBp          Int      @default(0)
+  priority        Int      @default(0)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([tenantId, countryCode, isActive, priority(sort: Desc)])
+  @@index([tenantId, name])
+}
+
+/// Shipping rate applied at checkout. Each row binds one or more country
+/// codes to a base price. `freeShippingAboveCents` lets a zone be free for
+/// big enough baskets. `minSubtotalCents` makes the rate eligible only for
+/// baskets above that threshold (otherwise the row is skipped).
+model ShippingRate {
+  id                     String   @id @default(cuid())
+  tenantId               String
+  name                   String
+  /// JSON array of ISO country codes the rate applies to.
+  countryCodes           Json
+  currency               String   @db.Char(3)
+  basePriceCents         Int      @default(0)
+  minSubtotalCents       Int?
+  freeShippingAboveCents Int?
+  estimatedDays          Int?
+  isActive               Boolean  @default(true)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  @@index([tenantId, isActive])
+  @@index([tenantId, name])
+}
+
+// ============================================================
+// ERP (Phase 10) — suppliers + purchase orders + stock reception
+// ============================================================
+
+model Supplier {
+  id               String   @id @default(cuid())
+  tenantId         String
+  name             String
+  contactEmail     String?
+  phone            String?
+  currency         String   @db.Char(3)
+  paymentTermsDays Int      @default(30)
+  notes            String?
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  purchaseOrders PurchaseOrder[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId, isActive])
+}
+
+enum PurchaseOrderStatus {
+  DRAFT
+  SENT
+  PARTIAL
+  RECEIVED
+  CANCELLED
+}
+
+/// A purchase order sent to a Supplier. Status flow:
+///   DRAFT → SENT → (PARTIAL)* → RECEIVED | CANCELLED
+/// Receiving a PO atomically increments InventoryItem.onHand on every line
+/// and marks the line's qtyReceived.
+model PurchaseOrder {
+  id          String              @id @default(cuid())
+  tenantId    String
+  supplierId  String
+  number      String
+  status      PurchaseOrderStatus @default(DRAFT)
+  currency    String              @db.Char(3)
+  subtotal    Decimal             @db.Decimal(12, 2)
+  shipping    Decimal             @default(0) @db.Decimal(12, 2)
+  tax         Decimal             @default(0) @db.Decimal(12, 2)
+  total       Decimal             @db.Decimal(12, 2)
+  expectedAt  DateTime?
+  placedAt    DateTime?
+  receivedAt  DateTime?
+  notes       String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  supplier Supplier            @relation(fields: [supplierId], references: [id], onDelete: Restrict)
+  lines    PurchaseOrderLine[]
+
+  @@unique([tenantId, number])
+  @@index([tenantId, status, placedAt(sort: Desc)])
+  @@index([tenantId, supplierId])
+}
+
+model PurchaseOrderLine {
+  id              String  @id @default(cuid())
+  purchaseOrderId String
+  variantId       String
+  sku             String
+  qtyOrdered      Int
+  qtyReceived     Int     @default(0)
+  unitCost        Decimal @db.Decimal(12, 2)
+  subtotal        Decimal @db.Decimal(12, 2)
+
+  purchaseOrder PurchaseOrder @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+
+  @@index([purchaseOrderId])
+  @@index([variantId])
+}
+
+// ============================================================
+// Promotions (Phase 7) — discount codes, BOGO, free shipping
+// ============================================================
+
+enum PromotionType {
+  PERCENTAGE
+  FIXED_AMOUNT
+  FREE_SHIPPING
+}
+
+enum PromotionStatus {
+  DRAFT
+  ACTIVE
+  DISABLED
+  EXPIRED
+}
+
+/// Merchant-configured discount. `code` is the human-redeemable handle
+/// (typed into the cart); `value` is interpreted based on `type`:
+///   - PERCENTAGE: integer 1..100 (10 → 10% off)
+///   - FIXED_AMOUNT: money in minor units (500 → €5.00 off)
+///   - FREE_SHIPPING: value ignored, shipping set to 0
+///
+/// Constraints (minSubtotal, startsAt, endsAt, maxRedemptions) are enforced
+/// by the applyPromotion use-case, not by the DB.
+model Promotion {
+  id               String           @id @default(cuid())
+  tenantId         String
+  code             String
+  name             String
+  type             PromotionType
+  value            Int              @default(0)
+  status           PromotionStatus  @default(ACTIVE)
+  currency         String?          @db.Char(3)
+  minSubtotalCents Int?
+  startsAt         DateTime?
+  endsAt           DateTime?
+  maxRedemptions   Int?
+  redemptionCount  Int              @default(0)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@unique([tenantId, code])
+  @@index([tenantId, status, endsAt])
+}
+
+// ============================================================
+// CMS pages (Phase 6) — merchant-editable storefront content
+// ============================================================
+
+enum PageStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+/// Merchant-authored landing pages, about pages, legal pages, etc. routed
+/// by slug on the storefront. Body is plain Markdown — Phase 6.1 adds rich
+/// MDX with custom components.
+model Page {
+  id          String     @id @default(cuid())
+  tenantId    String
+  slug        String
+  status      PageStatus @default(DRAFT)
+  title       Json // { en: "About", fr: "À propos" }
+  body        Json // { en: "# Welcome…", fr: "# Bienvenue…" }
+  seo         Json? // { title: {...}, description: {...} }
+  publishedAt DateTime?
+  authorId    String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@unique([tenantId, slug])
+  @@index([tenantId, status, updatedAt(sort: Desc)])
+  @@index([tenantId, publishedAt(sort: Desc)])
+}
+
+// ============================================================
+// Auth users (Phase 5) — admin / merchant / staff / customer
+// ============================================================
+
+enum UserRole {
+  OWNER
+  ADMIN
+  STAFF
+  CUSTOMER
+}
+
+/// One authenticatable user per (tenantId, email). Merchant staff, admins,
+/// and registered storefront customers all live here — differentiated by
+/// `role`. Customer checkout records remain in the Customer table for
+/// order-placement flows; this table is the identity layer.
+model AuthUser {
+  id             String   @id @default(cuid())
+  tenantId       String
+  email          String
+  passwordHash   String
+  role           UserRole @default(CUSTOMER)
+  displayName    String?
+  emailVerified  Boolean  @default(false)
+  lastLoginAt    DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([tenantId, email])
+  @@index([tenantId, role])
+  @@index([email])
+}
+
+// ============================================================
+// Per-tenant API keys (Phase 33)
+// ============================================================
+
+/// Tenants can mint API keys to call /v1/* without going through the
+/// admin session cookie. The raw key is shown once at creation, hashed
+/// at rest, and resolved by the x-api-key middleware on incoming requests.
+///
+/// `prefix` is the first 8 chars of the raw key — stored in clear so
+/// the merchant can identify keys in their dashboard without revealing
+/// the secret. `scopes` is a free-form string[] — Phase 33.1 can
+/// narrow the ACL once we know which surfaces need write vs read.
+model ApiKey {
+  id          String    @id @default(cuid())
+  tenantId    String
+  name        String
+  prefix      String
+  hashedKey   String    @unique
+  scopes      String[]  @default([])
+  lastUsedAt  DateTime?
+  revokedAt   DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@unique([tenantId, name])
+  @@index([tenantId, revokedAt])
+  @@index([prefix])
+}
+
+// ============================================================
+// Semantic search — ProductEmbedding (Phase 4.2)
+// ============================================================
+
+/// One embedding per product. The `embedding` vector column is added via raw
+/// SQL in the migration because Prisma does not support pgvector types
+/// natively. Dimensions are configured at the application layer (default
+/// 1024 for voyage-3-large). Reindex by regenerating the vector.
+///
+/// Queries go through PrismaSearchRepository using $queryRaw + the
+/// pgvector cosine operator `<=>`.
+model ProductEmbedding {
+  id         String   @id @default(cuid())
+  tenantId   String
+  productId  String   @unique
+  model      String
+  dimensions Int
+  searchText String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, updatedAt(sort: Desc)])
+}
+
+// ============================================================
+// Audit Log (INSERT-only, enforced by migration grants)
+// ============================================================
+
+model AuditLog {
+  id           String   @id @default(cuid())
+  tenantId     String
+  actorType    String
+  actorId      String?
+  action       String
+  resourceType String
+  resourceId   String
+  diff         Json?
+  ip           String?
+  userAgent    String?
+  requestId    String?
+  createdAt    DateTime @default(now())
+
+  @@index([tenantId, createdAt(sort: Desc)])
+  @@index([tenantId, resourceType, resourceId])
+}
+
+
+// ============================================================
+// Wishlist (Phase 27) — customer-favourited products
+// ============================================================
+
+/// A registered customer can favourite products. One row per
+/// (tenantId, customerId, productId); storefront toggles it via a
+/// single POST that upserts-or-deletes.
+model WishlistItem {
+  id         String   @id @default(cuid())
+  tenantId   String
+  customerId String
+  productId  String
+  createdAt  DateTime @default(now())
+
+  @@unique([tenantId, customerId, productId])
+  @@index([tenantId, customerId, createdAt(sort: Desc)])
+  @@index([tenantId, productId])
+}
+
+
+// ============================================================
+// Order notes (Phase 42) — merchant-facing internal timeline
+// ============================================================
+
+/// Free-text notes a merchant (or a system process, e.g. email send,
+/// webhook retry, refund) attaches to an order. Append-only — there's
+/// no update path, because notes are forensic: a correction lives as
+/// a *new* note referencing the previous one, not as a silent rewrite.
+model OrderNote {
+  id         String   @id @default(cuid())
+  tenantId   String
+  orderId    String
+  /// "user" for a merchant staff note, "system" for automation.
+  authorType String
+  /// Optional — AuthUser.id for user notes, null for system.
+  authorId   String?
+  /// Display name captured at write-time so deleted users still read
+  /// as "Sarah from Support" rather than a dangling id.
+  authorName String
+  body       String
+  createdAt  DateTime @default(now())
+
+  @@index([tenantId, orderId, createdAt(sort: Desc)])
+  @@index([tenantId, authorId])
+}
+
+
+// ============================================================
+// Customer notes (Phase 44) — merchant-facing CRM timeline
+// ============================================================
+
+/// Same shape + semantics as OrderNote but keyed by customerId.
+/// Append-only; a correction is a new note that references the prior
+/// one. "VIP, handle with care" / "prefers Tuesday delivery" / etc.
+model CustomerNote {
+  id         String   @id @default(cuid())
+  tenantId   String
+  customerId String
+  authorType String
+  authorId   String?
+  authorName String
+  body       String
+  createdAt  DateTime @default(now())
+
+  @@index([tenantId, customerId, createdAt(sort: Desc)])
+  @@index([tenantId, authorId])
+}
+
+
+// ============================================================
+// Customer address book (Phase 50) — saved shipping destinations
+// ============================================================
+
+/// A registered customer's saved shipping addresses. Uses the same
+/// field set as the guest checkout ShippingAddress (Phase 35) so
+/// prefill into the checkout form is zero-transform. isDefault
+/// marks the "first" address — at most one per customer, enforced
+/// at the application layer to keep the write path cheap (no unique
+/// index gymnastics).
+model CustomerAddress {
+  id         String   @id @default(cuid())
+  tenantId   String
+  customerId String
+  label      String?
+  firstName  String
+  lastName   String
+  company    String?
+  line1      String
+  line2      String?
+  city       String
+  region     String?
+  postcode   String
+  country    String
+  phone      String?
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([tenantId, customerId, createdAt(sort: Desc)])
+  @@index([tenantId, customerId, isDefault])
+}

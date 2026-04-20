@@ -1,0 +1,140 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Skill2Cochon/ClaudeShop/main/.claude/install-manifest.schema.json",
+  "name": "claudeshop",
+  "version": "0.1.0",
+  "description": "ClaudeShop install manifest — declares what Claude needs to deploy this repo without losing context over a long session.",
+  "homepage": "https://github.com/Skill2Cochon/ClaudeShop",
+  "license": "Apache-2.0",
+  "install": {
+    "entrypoint": "install.sh",
+    "playbook": ".claude/install.md",
+    "skills": [
+      "plugins/claudeshop-install/skills/claudeshop-install"
+    ],
+    "commands": [
+      "plugins/claudeshop-install/commands/install.md",
+      "plugins/claudeshop-install/commands/bootstrap.md",
+      "plugins/claudeshop-install/commands/deploy.md"
+    ]
+  },
+  "requires": {
+    "runtime": {
+      "node": ">=22.0.0",
+      "pnpm": ">=10.0.0",
+      "docker": ">=24"
+    },
+    "network": [
+      "registry.npmjs.org",
+      "api.anthropic.com",
+      "ghcr.io",
+      "docker.io"
+    ]
+  },
+  "memory_stack": {
+    "description": "Tools Claude should have registered so long multi-phase deploys don't lose alignment. Ordered by priority.",
+    "required": [
+      {
+        "name": "gitnexus",
+        "purpose": "Code knowledge graph — blast radius before any edit, callers/callees, process flows",
+        "install": "npx gitnexus analyze --embeddings",
+        "mcp": { "command": "npx", "args": ["-y", "gitnexus", "mcp"] },
+        "token_cost": "~400 once, ~100-200/query",
+        "repo": "https://github.com/abhigyanpatwari/GitNexus"
+      },
+      {
+        "name": "claude-mem",
+        "purpose": "PostToolUse session observation capture + vector recall across sessions",
+        "install": "claude plugin install thedotmack/claude-mem",
+        "mcp": { "command": "npx", "args": ["-y", "@thedotmack/claude-mem", "mcp"] },
+        "token_cost": "~300 baseline, ~50-500/query",
+        "repo": "https://github.com/thedotmack/claude-mem"
+      },
+      {
+        "name": "basic-memory",
+        "purpose": "Local-first Markdown knowledge base, Obsidian-compatible, write_note/search_notes/build_context",
+        "install": "uv tool install basic-memory",
+        "mcp": {
+          "command": "uvx",
+          "args": ["basic-memory"],
+          "env": { "BASIC_MEMORY_HOME": "./vault" }
+        },
+        "token_cost": "low — files on disk",
+        "repo": "https://github.com/basicmachines-co/basic-memory"
+      }
+    ],
+    "recommended": [
+      {
+        "name": "mempalace",
+        "purpose": "L0-L3 palace memory for multi-hour deploy sessions — ~170-token boot, 96.6% retrieval",
+        "install": "npm i -g mempalace",
+        "mcp": { "command": "npx", "args": ["-y", "mempalace", "mcp"] },
+        "token_cost": "170 boot, low ongoing",
+        "repo": "https://github.com/MemPalace/mempalace"
+      },
+      {
+        "name": "graphify",
+        "purpose": "Folder \u2192 knowledge graph + Obsidian vault generator; claims ~71\u00d7 token reduction on long sessions",
+        "install": "pip install graphify && graphify install",
+        "hook": "PreToolUse",
+        "token_cost": "~100 per query",
+        "repo": "https://github.com/safishamsi/graphify"
+      }
+    ],
+    "optional": [
+      {
+        "name": "hermes-agent",
+        "purpose": "Self-improving agent runtime with FTS5 recall — use only if you plan to run ClaudeShop with a persistent multi-channel agent gateway",
+        "install": "uv pip install 'hermes-agent[mcp,cli]'",
+        "token_cost": "heavy runtime",
+        "repo": "https://github.com/nousresearch/hermes-agent"
+      },
+      {
+        "name": "memento-mcp",
+        "purpose": "Neo4j-backed knowledge-graph memory with temporal edges",
+        "install": "npx -y memento-mcp",
+        "token_cost": "requires Neo4j",
+        "repo": "https://github.com/gannonh/memento-mcp"
+      }
+    ]
+  },
+  "agent_sdk": {
+    "description": "Claude Agent SDK is the programmatic harness recommended for scripting long deploys.",
+    "typescript": {
+      "package": "@anthropic-ai/claude-agent-sdk",
+      "version": "^0.2.114",
+      "repo": "https://github.com/anthropics/claude-agent-sdk-typescript"
+    },
+    "patterns": [
+      "initializer-agent + init.sh + claude-progress.txt checkpoints",
+      "sub-agents with narrow scope per phase",
+      "CHANGELOG.md as portable session memory"
+    ]
+  },
+  "health": {
+    "endpoints": [
+      { "name": "api-live", "url": "/health", "expected": 200 },
+      { "name": "api-ready", "url": "/health/ready", "expected": 200 },
+      { "name": "admin", "url": "/api/health", "expected": 200 },
+      { "name": "storefront", "url": "/api/health", "expected": 200 }
+    ]
+  },
+  "environments": {
+    "local": {
+      "compose": "docker-compose.yml",
+      "env": ".env.example",
+      "bootstrap": "./scripts/bootstrap-demo.sh local",
+      "urls": {
+        "storefront": "http://localhost:3000",
+        "admin": "http://localhost:3002",
+        "api": "http://localhost:3001"
+      }
+    },
+    "production": {
+      "compose": "docker-compose.prod.yml",
+      "env": ".env.production.example",
+      "bootstrap": "./scripts/bootstrap-demo.sh production",
+      "coolify": ".coolify/stack.yaml"
+    }
+  },
+  "pre_launch_audit": "AUDIT.md"
+}
