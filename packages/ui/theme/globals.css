@@ -1,8 +1,14 @@
+/* Phase 60 fix — @import MUST precede every other rule (CSS spec).
+   v0.1 placed @import after the @tailwind directives, which expanded
+   into ~1486 base rules before the import; Turbopack / PostCSS 8 now
+   rejects this with:
+     "@import rules must precede all rules aside from @charset and @layer statements"
+   Reordering is the idiomatic fix; tokens load first, Tailwind builds on top. */
+@import './tokens.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import './tokens.css';
 
 @layer base {
   * {

@@ -35,6 +35,9 @@ apps/*/.env.local
 # Local Claude overrides (developer's private context — not checked in)
 .claude/CLAUDE.local.md
 .claude/local/
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
+.claude/scheduled_tasks/
 CLAUDE.local.md
 
 # Local handoff / session drafts

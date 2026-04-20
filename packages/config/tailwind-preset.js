@@ -1,8 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 // Shared Tailwind preset — consumed by apps/storefront, apps/admin, packages/ui.
 // Tokens defined via CSS variables in packages/ui/theme/tokens.css.
-
-module.exports = {
+//
+// This package is "type": "module" (see package.json), so we export as ESM.
+// Phase 60 fix: v0.1 used `module.exports = {...}` which evaluates to `undefined`
+// when Node loads the file as ESM — the consuming tailwind.config.ts then
+// received `undefined` for the preset and Next.js refused to boot.
+export default {
   darkMode: ['class', '[data-theme="dark"]'],
   theme: {
     container: {
