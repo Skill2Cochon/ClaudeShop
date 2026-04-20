@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
   // `.next/standalone` folder as the entrypoint.
   output: 'standalone',
   outputFileTracingRoot: join(__dirname, '../../'),
+  // Phase 60 fix — see apps/admin/next.config.ts for the rationale.
+  turbopack: {
+    resolveExtensions: ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.json'],
+  },
   experimental: {
     typedRoutes: true,
     serverActions: {
