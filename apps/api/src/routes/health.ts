@@ -3,21 +3,25 @@ import type { FastifyInstance } from 'fastify';
 /**
  * /healthz  — liveness probe (always 200 if the process is running).
  * /readyz   — readiness probe (checks downstream dependencies).
+ * /health   — alias for /healthz, exposed because every second-hand
+ *             tutorial + our own handbook/Dockerfile healthcheck probe
+ *             that path by instinct. Keeping both avoids silent 404s.
  *
- * Coolify uses /healthz; Uptime Kuma uses /readyz.
+ * Coolify / k8s use /healthz; Uptime Kuma uses /readyz.
  * Neither endpoint is subject to rate limiting (allow-list in plugin).
  */
 export async function registerHealthRoutes(app: FastifyInstance): Promise<void> {
   const startedAt = Date.now();
 
-  app.get('/healthz', {
-    config: { rateLimit: false },
-  }, async () => ({
+  const livenessHandler = async () => ({
     data: {
       status: 'ok' as const,
       uptime: Math.floor((Date.now() - startedAt) / 1000),
     },
-  }));
+  });
+
+  app.get('/healthz', { config: { rateLimit: false } }, livenessHandler);
+  app.get('/health', { config: { rateLimit: false } }, livenessHandler);
 
   app.get('/readyz', {
     config: { rateLimit: false },

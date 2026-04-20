@@ -114,8 +114,35 @@ async function start() {
     'Copilot chat provider ready',
   );
 
+  // Phase 60 — slug → tenant-id resolver with a small LRU cache.
+  // Used by the preHandler hook in buildApp(). 60-second TTL keeps
+  // stale cache harmless even if a tenant rename happens mid-session.
+  const slugCache = new Map<string, { id: string; expiresAt: number }>();
+  const SLUG_CACHE_TTL_MS = 60_000;
+  const SLUG_CACHE_MAX = 200;
+  const resolveTenantIdFromSlug = async (slug: string): Promise<string | null> => {
+    const now = Date.now();
+    const cached = slugCache.get(slug);
+    if (cached && cached.expiresAt > now) {
+      return cached.id;
+    }
+    const row = await prisma.tenant.findUnique({
+      where: { slug },
+      select: { id: true },
+    });
+    if (!row) return null;
+    // Cheap LRU: evict oldest if full.
+    if (slugCache.size >= SLUG_CACHE_MAX) {
+      const oldest = slugCache.keys().next().value;
+      if (oldest !== undefined) slugCache.delete(oldest);
+    }
+    slugCache.set(slug, { id: row.id, expiresAt: now + SLUG_CACHE_TTL_MS });
+    return row.id;
+  };
+
   const app = await buildApp({
     env,
+    resolveTenantIdFromSlug,
     productRepository,
     cartRepository,
     variantRepository,

@@ -1,5 +1,19 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
-const DEMO_TENANT_ID = process.env.STOREFRONT_TENANT_ID ?? 'demo';
+
+// Phase 60 — same fallback chain as src/lib/api.ts. Kept inline (rather
+// than imported) because importing crosses the "lib" boundary twice and
+// Next.js already bundles per-file; the 6-line duplication is not worth
+// the import churn.
+const TENANT_ID_ENV =
+  process.env.STOREFRONT_TENANT_ID ?? process.env.SEEDED_DEMO_TENANT_ID ?? '';
+const TENANT_SLUG_ENV =
+  process.env.STOREFRONT_TENANT_SLUG ?? process.env.SEEDED_DEMO_TENANT_SLUG ?? 'demo';
+function tenantHeaders(): Record<string, string> {
+  if (TENANT_ID_ENV && TENANT_ID_ENV.length >= 8) {
+    return { 'x-tenant-id': TENANT_ID_ENV };
+  }
+  return { 'x-tenant-slug': TENANT_SLUG_ENV };
+}
 
 export interface SiteBrand {
   name: string;
@@ -41,7 +55,7 @@ export async function getSite(): Promise<Site> {
     const res = await fetch(`${API_URL}/v1/site`, {
       headers: {
         accept: 'application/json',
-        'x-tenant-id': DEMO_TENANT_ID,
+        ...tenantHeaders(),
       },
       next: { revalidate: 60, tags: ['site'] },
     });

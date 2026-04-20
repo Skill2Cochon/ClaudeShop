@@ -103,6 +103,20 @@ Seed :
 - **local** : `pnpm db:seed` (demo tenant + `demo@claudeshop.local / demo-admin-1234`)
 - **prod** : only if user set `SEED_DEMO=true` in `.env.production`. Otherwise propose `pnpm --filter @claudeshop/db create-admin` for a real first admin.
 
+> [!info] Phase 60+ — `db:seed` now writes tenant artefacts automatically.
+> After creating the demo tenant, the seed writes three files:
+>
+> | File | Purpose |
+> |---|---|
+> | `<repo>/.env.seeded` | Audit trail — full demo metadata (id, slug, admin creds, timestamp) |
+> | `<repo>/apps/storefront/.env.local` | Next.js auto-loads it — sets `SEEDED_DEMO_TENANT_ID` + slug |
+> | `<repo>/apps/admin/.env.local` | Same, for the admin app |
+>
+> All three are gitignored. Storefront + admin also address the tenant
+> **by slug** (`x-tenant-slug: demo`) when no CUID is set — the API
+> resolves it via Prisma + an in-process LRU cache. So even if the
+> `.env.local` files are missing, the demo still works.
+
 ## Phase 5 — Register MCP servers (for Claude context continuity)
 
 Read `.claude/mcp.json` and prompt the user to append each server entry to their `~/.claude.json` (or project-local equivalent). Never auto-write — show the JSON block and ask for confirmation.

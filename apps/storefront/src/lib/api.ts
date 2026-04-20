@@ -15,7 +15,32 @@ import type { Category } from '@claudeshop/contracts/category';
 import type { Review, ReviewSummary } from '@claudeshop/contracts/review';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
-const DEMO_TENANT_ID = process.env.STOREFRONT_TENANT_ID ?? 'demo';
+
+/**
+ * Tenant addressing (Phase 60).
+ *
+ * Preferred order:
+ *   1. STOREFRONT_TENANT_ID (explicit operator override — CUID)
+ *   2. SEEDED_DEMO_TENANT_ID (written by `pnpm db:seed` to apps/storefront/.env.local)
+ *   3. fall back to the slug header — resolved server-side via Prisma+LRU cache
+ *
+ * This keeps fresh installs working out-of-the-box: the operator never
+ * has to hand-copy the seed-generated CUID into an env file before the
+ * storefront renders its first page.
+ */
+const TENANT_ID_ENV =
+  process.env.STOREFRONT_TENANT_ID ?? process.env.SEEDED_DEMO_TENANT_ID ?? '';
+const TENANT_SLUG_ENV =
+  process.env.STOREFRONT_TENANT_SLUG ?? process.env.SEEDED_DEMO_TENANT_SLUG ?? 'demo';
+
+function tenantHeaders(): Record<string, string> {
+  // Prefer CUID when known (no server-side lookup cost); otherwise fall
+  // back to slug which the API resolves via a cached Prisma query.
+  if (TENANT_ID_ENV && TENANT_ID_ENV.length >= 8) {
+    return { 'x-tenant-id': TENANT_ID_ENV };
+  }
+  return { 'x-tenant-slug': TENANT_SLUG_ENV };
+}
 
 interface ApiResponse<T> {
   data: T;
@@ -39,7 +64,7 @@ async function apiFetch<T>(path: string, init: FetchOpts = {}): Promise<T | null
     headers: {
       accept: 'application/json',
       'content-type': 'application/json',
-      'x-tenant-id': DEMO_TENANT_ID,
+      ...tenantHeaders(),
       ...(init.headers ?? {}),
     },
     // Non-GET: dynamic. GET: ISR with per-path tag.
@@ -51,7 +76,12 @@ async function apiFetch<T>(path: string, init: FetchOpts = {}): Promise<T | null
   if (res.status === 404) return null;
   if (!res.ok) {
     const body = (await res.json().catch(() => null)) as ApiError | null;
-    throw new Error(body?.error?.message ?? `API error ${res.status} on ${path}`);
+    // Phase 60 — always include status + path so operators see the real
+    // cause in the Next.js error overlay. v0.1 fell back to a generic
+    // "Internal server error" string which hid 500s behind guesswork.
+    const serverMessage = body?.error?.message ?? body?.error?.code;
+    const prefix = `API ${res.status} on ${path}`;
+    throw new Error(serverMessage ? `${prefix}: ${serverMessage}` : prefix);
   }
   const body = (await res.json()) as ApiResponse<T>;
   return body.data;
@@ -140,7 +170,6 @@ export async function getProductReviews(
   slug: string,
   opts: { page?: number; limit?: number } = {},
 ): Promise<ReviewListResponse | null> {
-  const tenantId = DEMO_TENANT_ID;
   const page = opts.page ?? 1;
   const limit = opts.limit ?? 10;
   try {
@@ -149,7 +178,7 @@ export async function getProductReviews(
       {
         headers: {
           accept: 'application/json',
-          'x-tenant-id': tenantId,
+          ...tenantHeaders(),
         },
         next: { revalidate: 60 },
       },
@@ -318,7 +347,7 @@ async function accountFetch<T>(
     headers: {
       accept: 'application/json',
       'content-type': 'application/json',
-      'x-tenant-id': DEMO_TENANT_ID,
+      ...tenantHeaders(),
       'x-customer-email': customerEmail,
       ...(init.headers ?? {}),
     },
@@ -424,7 +453,7 @@ export async function changePassword(input: {
     headers: {
       accept: 'application/json',
       'content-type': 'application/json',
-      'x-tenant-id': DEMO_TENANT_ID,
+      ...tenantHeaders(),
     },
     body: JSON.stringify(input),
     cache: 'no-store',
@@ -454,7 +483,7 @@ export async function subscribeToNewsletter(input: {
     headers: {
       accept: 'application/json',
       'content-type': 'application/json',
-      'x-tenant-id': DEMO_TENANT_ID,
+      ...tenantHeaders(),
     },
     body: JSON.stringify(input),
     cache: 'no-store',

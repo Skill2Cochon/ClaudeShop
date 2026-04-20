@@ -31,7 +31,13 @@ import type { Review, ReviewStatus } from '@claudeshop/contracts/review';
 import { getCurrentSession } from './session';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
-const FALLBACK_TENANT_ID = process.env.ADMIN_TENANT_ID ?? 'demo';
+
+// Phase 60 — same fallback chain as apps/admin/src/lib/server-fetch.ts.
+// See that file for the full rationale.
+const FALLBACK_TENANT_ID =
+  process.env.ADMIN_TENANT_ID ?? process.env.SEEDED_DEMO_TENANT_ID ?? '';
+const FALLBACK_TENANT_SLUG =
+  process.env.ADMIN_TENANT_SLUG ?? process.env.SEEDED_DEMO_TENANT_SLUG ?? 'demo';
 
 interface ApiResponse<T> {
   data: T;
@@ -42,22 +48,26 @@ interface ApiError {
   error: { code: string; message: string; status: number };
 }
 
-async function resolveTenantHeader(): Promise<string> {
+async function resolveTenantHeaders(): Promise<Record<string, string>> {
   const session = await getCurrentSession();
-  return session?.tenantId ?? FALLBACK_TENANT_ID;
+  const id = session?.tenantId ?? FALLBACK_TENANT_ID;
+  if (id && id.length >= 8) {
+    return { 'x-tenant-id': id };
+  }
+  return { 'x-tenant-slug': FALLBACK_TENANT_SLUG };
 }
 
 async function apiFetch<T>(
   path: string,
   init: RequestInit = {},
 ): Promise<{ data: T | null; meta: ApiResponse<unknown>['meta'] }> {
-  const tenantId = await resolveTenantHeader();
+  const tenantHeaders = await resolveTenantHeaders();
   const res = await fetch(`${API_URL}${path}`, {
     ...init,
     headers: {
       accept: 'application/json',
       'content-type': 'application/json',
-      'x-tenant-id': tenantId,
+      ...tenantHeaders,
       ...(init.headers ?? {}),
     },
     cache: 'no-store',
@@ -66,7 +76,12 @@ async function apiFetch<T>(
   if (res.status === 404) return { data: null, meta: undefined };
   if (!res.ok) {
     const body = (await res.json().catch(() => null)) as ApiError | null;
-    throw new Error(body?.error?.message ?? `API error ${res.status} on ${path}`);
+    // Phase 60 — always include status + path so operators see the
+    // real cause (the v0.1 `${body.error.message ?? 'Internal server error'}`
+    // fallback hid 500s behind an unhelpful generic string).
+    const serverMessage = body?.error?.message ?? body?.error?.code;
+    const prefix = `API ${res.status} on ${path}`;
+    throw new Error(serverMessage ? `${prefix}: ${serverMessage}` : prefix);
   }
   const body = (await res.json()) as ApiResponse<T>;
   return { data: body.data, meta: body.meta };
@@ -666,7 +681,7 @@ export async function searchProductsByQuery(
   query: string,
   opts: { limit?: number } = {},
 ): Promise<{ hits: SearchHit[]; meta: SearchMeta | null }> {
-  const tenantId = await resolveTenantHeader();
+  const tenantHeaders = await resolveTenantHeaders();
   const params = new URLSearchParams({ q: query });
   if (opts.limit) params.set('limit', String(opts.limit));
   try {
@@ -675,7 +690,7 @@ export async function searchProductsByQuery(
       {
         headers: {
           accept: 'application/json',
-          'x-tenant-id': tenantId,
+          ...tenantHeaders,
         },
         cache: 'no-store',
       },

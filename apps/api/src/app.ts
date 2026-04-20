@@ -156,6 +156,19 @@ export interface BuildAppOptions {
    * Phase 2+ replaces this with subdomain + auth session resolution.
    */
   resolveTenantId?: (request: { headers: Record<string, unknown> }) => string;
+  /**
+   * Optional async slug → tenant-id resolver. When a request arrives
+   * with only `x-tenant-slug` (no `x-tenant-id`), a preHandler hook
+   * calls this function and writes the resolved id onto the request
+   * headers so the sync resolveTenantId downstream still works unchanged.
+   *
+   * Wired in server.ts to a Prisma lookup with an LRU cache (60s TTL),
+   * so repeated requests for the same slug incur zero DB cost after the
+   * first hit. Exists so a fresh-install storefront/admin can address
+   * the demo tenant by its stable slug without hardcoding the seed's
+   * generated CUID into every env file.
+   */
+  resolveTenantIdFromSlug?: (slug: string) => Promise<string | null>;
   /** Phase 2 stub: resolve currency per tenant (defaults to EUR). */
   resolveCurrency?: (request: { headers: Record<string, unknown> }) => string;
   /** Order number prefix per deployment (defaults to "CS"). */
@@ -251,17 +264,62 @@ export async function buildApp(opts: BuildAppOptions): Promise<FastifyInstance> 
   // preHandler hook, so API-key clients don't need to also send
   // `x-tenant-id` explicitly. Callers with a session cookie pass
   // the header on every request as before.
+  //
+  // Phase 60: a second preHandler (below) also accepts `x-tenant-slug`
+  // and rewrites it into `x-tenant-id` via an async Prisma lookup,
+  // so fresh installs can hit the demo tenant without hardcoding
+  // the seed-generated CUID into every env file.
   const resolveTenantId =
     opts.resolveTenantId ??
     ((req) => {
       const header = req.headers['x-tenant-id'];
       if (typeof header !== 'string' || header.length < 8) {
         throw new Error(
-          'Missing tenant resolution. Provide an x-api-key / Bearer token or an x-tenant-id header.',
+          'Missing tenant resolution. Provide an x-api-key / Bearer token, ' +
+            'an x-tenant-id header, or an x-tenant-slug header.',
         );
       }
       return header;
     });
+
+  // Phase 60 — slug → id promotion preHandler.
+  //
+  // Fires before any route handler. Only does work when:
+  //   - `x-tenant-id` is missing or too short to be a valid id, AND
+  //   - `x-tenant-slug` is present, AND
+  //   - a `resolveTenantIdFromSlug` is configured (server.ts wires it).
+  //
+  // On success, writes the resolved id back into `x-tenant-id` so the
+  // sync resolveTenantId call sites downstream read it unchanged. On
+  // failure, leaves the request untouched so the sync resolver surfaces
+  // its own error envelope (no silent 500s).
+  if (opts.resolveTenantIdFromSlug) {
+    const resolveSlug = opts.resolveTenantIdFromSlug;
+    app.addHook('preHandler', async (req) => {
+      const existingId = req.headers['x-tenant-id'];
+      if (typeof existingId === 'string' && existingId.length >= 8) {
+        return;
+      }
+      const slugHeader = req.headers['x-tenant-slug'];
+      if (typeof slugHeader !== 'string' || slugHeader.length === 0) {
+        return;
+      }
+      // Keep slug format strict — only a-z0-9- / max 80 chars — so we
+      // can't be tricked into looking up weird strings.
+      if (!/^[a-z0-9][a-z0-9-]{0,79}$/.test(slugHeader)) {
+        return;
+      }
+      try {
+        const id = await resolveSlug(slugHeader);
+        if (id && id.length >= 8) {
+          (req.headers as Record<string, unknown>)['x-tenant-id'] = id;
+        }
+      } catch (err) {
+        req.log.warn({ err, slug: slugHeader }, 'Tenant slug lookup failed');
+        // Fall through — the sync resolver below will emit its own error.
+      }
+    });
+  }
 
   // Raw body capture for webhook signature verification (Phase 2.6).
   await app.register(rawBodyPlugin, {

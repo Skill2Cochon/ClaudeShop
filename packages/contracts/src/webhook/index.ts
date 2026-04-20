@@ -40,8 +40,10 @@ function isBlockedIPv4(host: string): boolean {
   if (!/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(host)) return false;
   if (BLOCKED_IPV4_PREFIXES.some((p) => host.startsWith(p))) return true;
   // 172.16.0.0 – 172.31.255.255 is also RFC1918
-  const [a, b] = host.split('.').map(Number);
-  if (a === 172 && b >= 16 && b <= 31) return true;
+  const parts = host.split('.').map(Number);
+  const a = parts[0];
+  const b = parts[1];
+  if (a === 172 && typeof b === 'number' && b >= 16 && b <= 31) return true;
   return false;
 }
 

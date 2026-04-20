@@ -20,8 +20,9 @@ updated: 2026-04-20
 | Severity | Open | Fixed in `main` |
 |---|---|---|
 | Critical | **1** (admin auth guard) | 0 |
-| High | **2** | **2** (SSRF guard + tenantId UUID validation) |
+| High | 1 | **3** (SSRF guard + tenantId UUID validation + `.env.production` gitignore) |
 | Medium | 4 | 0 |
+| UX friction | 0 | **4** (tenant slug addressing · seed `.env.seeded` · `/health` alias · readable API errors) |
 
 Risk to local-dev / single-merchant demo: **low**. Risk to a public multi-tenant deploy: **high** until the admin auth guard lands.
 
@@ -39,6 +40,21 @@ Risk to local-dev / single-merchant demo: **low**. Risk to a public multi-tenant
 - **File** :: `packages/contracts/src/webhook/index.ts`
 - **Before** :: `CreateWebhookSubscriptionInputSchema.url = z.string().url().max(2048)` — accepted `http://169.254.169.254/` (AWS metadata), `http://redis:6379/`, etc.
 - **After** :: New `WebhookUrlSchema` enforces HTTPS-only + blocks loopback / RFC1918 / link-local IPv4, all common IPv6 private ranges, `.local`/`.internal` hostnames, and known cloud-metadata endpoints. Applied to both `CreateWebhookSubscriptionInputSchema` and `UpdateWebhookSubscriptionInputSchema`.
+
+### ✅ FIXED-UX1 · Tenant addressing forced operators to hand-copy seed CUIDs
+- **Files** :: `apps/api/src/app.ts` (preHandler) · `apps/api/src/server.ts` (LRU cache) · `packages/db/src/seed.ts` (artefacts) · `apps/storefront/src/lib/*.ts` · `apps/admin/src/lib/*.ts`
+- **Symptom (discovered during live VPS install)** :: Fresh `pnpm db:seed` generates a Cuid. `resolveTenantId` required headers ≥ 8 chars. Storefront + admin fell back to `'demo'` which is 4 chars → 500 on every request. Operators had to manually copy the cuid into three env vars (`STOREFRONT_TENANT_ID`, `ADMIN_TENANT_ID`, `DEFAULT_TENANT_ID`) to unblock the demo.
+- **After** ::
+  1. API accepts `x-tenant-slug` (alongside `x-tenant-id`) via a preHandler that looks up the slug in a 60s-TTL in-process LRU (max 200 entries) and rewrites the header.
+  2. Seed writes `/root/<repo>/.env.seeded` + per-app `.env.local` files after upsert, so Next.js picks up `SEEDED_DEMO_TENANT_ID` without operator action.
+  3. Storefront + admin prefer the CUID when one is available, fall back to the slug header otherwise.
+  4. Added `/health` alias for `/healthz` (handbook + Dockerfile healthchecks expect it).
+  5. `apiFetch` in both apps now includes the status + path in the error it throws — no more generic "Internal server error" masking 500s.
+
+### ✅ FIXED-UX2 · API errors surfaced as "Internal server error"
+- **Files** :: `apps/storefront/src/lib/api.ts` · `apps/admin/src/lib/api.ts`
+- **Before** :: `throw new Error(body?.error?.message ?? \`API error ${res.status} on ${path}\`)` — if the API response had any `error.message` field, that message was surfaced; but the Next.js error overlay often collapsed this to "Internal server error" when the API returned a 500 without a body.
+- **After** :: Errors always include `API <status> on <path>: <server message>` so operators can distinguish a 404 from a 500 from an auth failure without reading the API logs.
 
 ---
 
