@@ -7,110 +7,115 @@
  *
  * Dark mode swaps semantic values under [data-theme="dark"] or .dark.
  * Runtime per-merchant theming overrides primitives only.
+ *
+ * Phase 60 fix: previous version wrapped every rule in `@layer base { ... }`.
+ * When Turbopack + Tailwind process this file in isolation (via @import from
+ * globals.css), the @layer is processed BEFORE `@tailwind base` has run, so
+ * PostCSS errors with "@layer base is used but no matching @tailwind base".
+ * The wrap isn't needed: tokens are CSS custom properties, layer cascade
+ * doesn't change their resolution — top-level :root is the idiomatic form.
  */
 
-@layer base {
-  :root {
-    /* --- Primitives (OKLCH for perceptual uniformity, P3 gamut) --- */
-    --brand-50: 98.2% 0.013 260;
-    --brand-100: 95% 0.025 260;
-    --brand-200: 88% 0.05 260;
-    --brand-300: 80% 0.08 260;
-    --brand-400: 70% 0.12 260;
-    --brand-500: 60% 0.18 260;
-    --brand-600: 52% 0.18 260;
-    --brand-700: 45% 0.16 260;
-    --brand-800: 37% 0.13 260;
-    --brand-900: 28% 0.1 260;
-    --brand-950: 19% 0.07 260;
+:root {
+  /* --- Primitives (OKLCH for perceptual uniformity, P3 gamut) --- */
+  --brand-50: 98.2% 0.013 260;
+  --brand-100: 95% 0.025 260;
+  --brand-200: 88% 0.05 260;
+  --brand-300: 80% 0.08 260;
+  --brand-400: 70% 0.12 260;
+  --brand-500: 60% 0.18 260;
+  --brand-600: 52% 0.18 260;
+  --brand-700: 45% 0.16 260;
+  --brand-800: 37% 0.13 260;
+  --brand-900: 28% 0.1 260;
+  --brand-950: 19% 0.07 260;
 
-    /* Neutral ramp (slightly cool gray) */
-    --neutral-0: 100% 0 0;
-    --neutral-50: 98.5% 0.002 260;
-    --neutral-100: 96% 0.004 260;
-    --neutral-200: 92% 0.006 260;
-    --neutral-300: 85% 0.008 260;
-    --neutral-400: 70% 0.01 260;
-    --neutral-500: 55% 0.012 260;
-    --neutral-600: 42% 0.014 260;
-    --neutral-700: 32% 0.014 260;
-    --neutral-800: 22% 0.012 260;
-    --neutral-900: 14% 0.01 260;
-    --neutral-950: 8% 0.008 260;
+  /* Neutral ramp (slightly cool gray) */
+  --neutral-0: 100% 0 0;
+  --neutral-50: 98.5% 0.002 260;
+  --neutral-100: 96% 0.004 260;
+  --neutral-200: 92% 0.006 260;
+  --neutral-300: 85% 0.008 260;
+  --neutral-400: 70% 0.01 260;
+  --neutral-500: 55% 0.012 260;
+  --neutral-600: 42% 0.014 260;
+  --neutral-700: 32% 0.014 260;
+  --neutral-800: 22% 0.012 260;
+  --neutral-900: 14% 0.01 260;
+  --neutral-950: 8% 0.008 260;
 
-    --danger-500: 60% 0.22 25;
-    --success-500: 55% 0.15 150;
-    --warning-500: 75% 0.15 75;
-    --info-500: 60% 0.12 240;
+  --danger-500: 60% 0.22 25;
+  --success-500: 55% 0.15 150;
+  --warning-500: 75% 0.15 75;
+  --info-500: 60% 0.12 240;
 
-    /* --- Semantic — light theme (Tailwind consumes via preset) --- */
-    --color-bg: 100 0 0;
-    --color-fg: 14 0.01 260;
-    --color-muted: 96 0.004 260;
-    --color-muted-fg: 42 0.014 260;
-    --color-card: 100 0 0;
-    --color-card-fg: 14 0.01 260;
-    --color-popover: 100 0 0;
-    --color-popover-fg: 14 0.01 260;
-    --color-border: 92 0.006 260;
-    --color-input: 92 0.006 260;
-    --color-ring: 60 0.18 260;
-    --color-primary: 52 0.18 260;
-    --color-primary-fg: 98.5 0.002 260;
-    --color-secondary: 96 0.004 260;
-    --color-secondary-fg: 22 0.012 260;
-    --color-accent: 96 0.004 260;
-    --color-accent-fg: 22 0.012 260;
-    --color-destructive: 60 0.22 25;
-    --color-destructive-fg: 98.5 0.002 260;
+  /* --- Semantic — light theme (Tailwind consumes via preset) --- */
+  --color-bg: 100 0 0;
+  --color-fg: 14 0.01 260;
+  --color-muted: 96 0.004 260;
+  --color-muted-fg: 42 0.014 260;
+  --color-card: 100 0 0;
+  --color-card-fg: 14 0.01 260;
+  --color-popover: 100 0 0;
+  --color-popover-fg: 14 0.01 260;
+  --color-border: 92 0.006 260;
+  --color-input: 92 0.006 260;
+  --color-ring: 60 0.18 260;
+  --color-primary: 52 0.18 260;
+  --color-primary-fg: 98.5 0.002 260;
+  --color-secondary: 96 0.004 260;
+  --color-secondary-fg: 22 0.012 260;
+  --color-accent: 96 0.004 260;
+  --color-accent-fg: 22 0.012 260;
+  --color-destructive: 60 0.22 25;
+  --color-destructive-fg: 98.5 0.002 260;
 
-    /* Radii */
-    --radius-sm: 0.375rem;
-    --radius-md: 0.5rem;
-    --radius-lg: 0.75rem;
+  /* Radii */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
 
-    /* Typography */
-    --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-    --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
-  }
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+}
 
-  [data-theme='dark'],
-  .dark {
-    --color-bg: 8 0.008 260;
-    --color-fg: 96 0.004 260;
-    --color-muted: 22 0.012 260;
-    --color-muted-fg: 70 0.01 260;
-    --color-card: 14 0.01 260;
-    --color-card-fg: 96 0.004 260;
-    --color-popover: 14 0.01 260;
-    --color-popover-fg: 96 0.004 260;
-    --color-border: 22 0.012 260;
-    --color-input: 22 0.012 260;
-    --color-ring: 60 0.18 260;
-    --color-primary: 70 0.12 260;
-    --color-primary-fg: 8 0.008 260;
-    --color-secondary: 22 0.012 260;
-    --color-secondary-fg: 96 0.004 260;
-    --color-accent: 22 0.012 260;
-    --color-accent-fg: 96 0.004 260;
-    --color-destructive: 55 0.2 25;
-    --color-destructive-fg: 98.5 0.002 260;
-  }
+[data-theme='dark'],
+.dark {
+  --color-bg: 8 0.008 260;
+  --color-fg: 96 0.004 260;
+  --color-muted: 22 0.012 260;
+  --color-muted-fg: 70 0.01 260;
+  --color-card: 14 0.01 260;
+  --color-card-fg: 96 0.004 260;
+  --color-popover: 14 0.01 260;
+  --color-popover-fg: 96 0.004 260;
+  --color-border: 22 0.012 260;
+  --color-input: 22 0.012 260;
+  --color-ring: 60 0.18 260;
+  --color-primary: 70 0.12 260;
+  --color-primary-fg: 8 0.008 260;
+  --color-secondary: 22 0.012 260;
+  --color-secondary-fg: 96 0.004 260;
+  --color-accent: 22 0.012 260;
+  --color-accent-fg: 96 0.004 260;
+  --color-destructive: 55 0.2 25;
+  --color-destructive-fg: 98.5 0.002 260;
+}
 
-  /* Density modes */
-  [data-density='compact'] {
-    font-size: 14px;
-  }
-  [data-density='spacious'] {
-    font-size: 16px;
-  }
+/* Density modes */
+[data-density='compact'] {
+  font-size: 14px;
+}
+[data-density='spacious'] {
+  font-size: 16px;
+}
 
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      transition-duration: 0.01ms !important;
-    }
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }
