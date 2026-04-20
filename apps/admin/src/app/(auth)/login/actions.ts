@@ -5,7 +5,23 @@ import { isAdminRole, type Session } from '@claudeshop/contracts/auth';
 import { getAdminSession } from '@/lib/session';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
-const TENANT_ID = process.env.ADMIN_TENANT_ID ?? 'demo';
+
+// Phase 60 hot-fix — v0.1 sent `'x-tenant-id': 'demo'` when no env var was
+// set. The API's preHandler requires a CUID ≥ 8 chars; the literal slug
+// 'demo' failed validation and the server action returned "Internal server
+// error". We now prefer CUID (operator / seed) and fall back to the slug
+// header which the API resolves via its Prisma + LRU cache.
+const TENANT_ID_ENV =
+  process.env.ADMIN_TENANT_ID ?? process.env.SEEDED_DEMO_TENANT_ID ?? '';
+const TENANT_SLUG_ENV =
+  process.env.ADMIN_TENANT_SLUG ?? process.env.SEEDED_DEMO_TENANT_SLUG ?? 'demo';
+
+function tenantHeaders(): Record<string, string> {
+  if (TENANT_ID_ENV && TENANT_ID_ENV.length >= 8) {
+    return { 'x-tenant-id': TENANT_ID_ENV };
+  }
+  return { 'x-tenant-slug': TENANT_SLUG_ENV };
+}
 
 interface UserResponse {
   data: {
@@ -42,7 +58,7 @@ export async function loginAction(
       headers: {
         accept: 'application/json',
         'content-type': 'application/json',
-        'x-tenant-id': TENANT_ID,
+        ...tenantHeaders(),
       },
       body: JSON.stringify({ email, password }),
       cache: 'no-store',

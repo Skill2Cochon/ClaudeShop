@@ -5,7 +5,22 @@ import type { Session } from '@claudeshop/contracts/auth';
 import { getCustomerSession } from '@/lib/session';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
-const TENANT_ID = process.env.STOREFRONT_TENANT_ID ?? 'demo';
+
+// Phase 60 hot-fix — same rationale as apps/admin/(auth)/login/actions.ts.
+// v0.1 sent the literal slug 'demo' as x-tenant-id which failed the API's
+// CUID length guard. Storefront auth (login + register + logout) was
+// silently broken on fresh installs with no tenant env set.
+const TENANT_ID_ENV =
+  process.env.STOREFRONT_TENANT_ID ?? process.env.SEEDED_DEMO_TENANT_ID ?? '';
+const TENANT_SLUG_ENV =
+  process.env.STOREFRONT_TENANT_SLUG ?? process.env.SEEDED_DEMO_TENANT_SLUG ?? 'demo';
+
+function tenantHeaders(): Record<string, string> {
+  if (TENANT_ID_ENV && TENANT_ID_ENV.length >= 8) {
+    return { 'x-tenant-id': TENANT_ID_ENV };
+  }
+  return { 'x-tenant-slug': TENANT_SLUG_ENV };
+}
 
 interface UserResponse {
   data: {
@@ -48,7 +63,7 @@ async function postJson(
     headers: {
       accept: 'application/json',
       'content-type': 'application/json',
-      'x-tenant-id': TENANT_ID,
+      ...tenantHeaders(),
     },
     body: JSON.stringify(body),
     cache: 'no-store',
