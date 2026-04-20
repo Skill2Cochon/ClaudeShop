@@ -1,7 +1,7 @@
 import { CreateProductInputSchema, type CreateProductInput, type Product } from '@claudeshop/contracts/product';
 import { ConflictError, ValidationError } from '@claudeshop/errors';
-import type { ProductRepository } from '../ports/product-repository.js';
-import type { Clock } from '../ports/clock.js';
+import type { ProductRepository } from '../ports/product-repository';
+import type { Clock } from '../ports/clock';
 
 export interface CreateProductDeps {
   tenantId: string;

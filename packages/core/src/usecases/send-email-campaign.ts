@@ -1,10 +1,10 @@
 import type { EmailCampaign } from '@claudeshop/contracts/crm';
 import { NotFoundError, ValidationError } from '@claudeshop/errors';
-import type { CustomerRepository } from '../ports/customer-repository.js';
-import type { CustomerSegmentRepository } from '../ports/customer-segment-repository.js';
-import type { EmailCampaignRepository } from '../ports/email-campaign-repository.js';
-import type { EmailProvider } from '../ports/email-provider.js';
-import type { Clock } from '../ports/clock.js';
+import type { CustomerRepository } from '../ports/customer-repository';
+import type { CustomerSegmentRepository } from '../ports/customer-segment-repository';
+import type { EmailCampaignRepository } from '../ports/email-campaign-repository';
+import type { EmailProvider } from '../ports/email-provider';
+import type { Clock } from '../ports/clock';
 
 export interface SendEmailCampaignDeps {
   tenantId: string;

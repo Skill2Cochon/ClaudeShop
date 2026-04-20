@@ -7,10 +7,10 @@ import type {
 import type {
   PurchaseOrderRepository,
   ReceivePurchaseOrderLinePatch,
-} from '../ports/purchase-order-repository.js';
-import type { InventoryRepository, StockReservation } from '../ports/inventory-repository.js';
-import type { Clock } from '../ports/clock.js';
-import { receivePurchaseOrder } from './receive-purchase-order.js';
+} from '../ports/purchase-order-repository';
+import type { InventoryRepository, StockReservation } from '../ports/inventory-repository';
+import type { Clock } from '../ports/clock';
+import { receivePurchaseOrder } from './receive-purchase-order';
 
 class InMemoryPORepository implements PurchaseOrderRepository {
   private readonly pos = new Map<string, PurchaseOrder>();

@@ -1,11 +1,11 @@
 import { z } from 'zod';
 import { NotFoundError, ValidationError } from '@claudeshop/errors';
-import type { ProductRepository } from '../ports/product-repository.js';
+import type { ProductRepository } from '../ports/product-repository';
 import type {
   AIProvider,
   GenerateProductCopyInput,
   ProductCopyResult,
-} from '../ports/ai-provider.js';
+} from '../ports/ai-provider';
 
 /**
  * Input contract for the `generateProductCopy` use-case.

@@ -5,8 +5,8 @@ import {
   MoneySchema,
   CurrencyCodeSchema,
   IsoDateTimeSchema,
-} from '../common/primitives.js';
-import { LocalizedRichTextSchema, LocalizedStringSchema } from '../common/i18n.js';
+} from '../common/primitives';
+import { LocalizedRichTextSchema, LocalizedStringSchema } from '../common/i18n';
 
 export const ProductStatusSchema = z.enum(['DRAFT', 'ACTIVE', 'ARCHIVED']);
 export const ProductTypeSchema = z.enum([

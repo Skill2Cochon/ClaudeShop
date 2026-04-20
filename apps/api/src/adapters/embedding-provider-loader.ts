@@ -1,5 +1,5 @@
 import { StubEmbeddingProvider, type EmbeddingProvider } from '@claudeshop/core';
-import { VoyageEmbeddingProvider } from './voyage-embedding-provider.js';
+import { VoyageEmbeddingProvider } from './voyage-embedding-provider';
 
 export interface EmbeddingProviderEnv {
   VOYAGE_API_KEY?: string;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { StubEmbeddingProvider } from './stub-embedding-provider.js';
+import { StubEmbeddingProvider } from './stub-embedding-provider';
 
 describe('StubEmbeddingProvider', () => {
   it('produces vectors of the configured dimension', async () => {

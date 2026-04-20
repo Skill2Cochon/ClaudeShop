@@ -1,8 +1,8 @@
 import { describe, expect, it, beforeEach } from 'vitest';
 import { ValidationError } from '@claudeshop/errors';
-import { InMemorySearchRepository } from '../adapters/in-memory-search-repository.js';
-import { StubEmbeddingProvider } from '../adapters/stub-embedding-provider.js';
-import { searchProducts } from './search-products.js';
+import { InMemorySearchRepository } from '../adapters/in-memory-search-repository';
+import { StubEmbeddingProvider } from '../adapters/stub-embedding-provider';
+import { searchProducts } from './search-products';
 
 describe('searchProducts use-case', () => {
   const tenantId = 'tnt01h0000000000000000000';

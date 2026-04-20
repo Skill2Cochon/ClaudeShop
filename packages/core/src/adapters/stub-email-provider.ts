@@ -3,7 +3,7 @@ import type {
   EmailProvider,
   EmailSendOutcome,
   EmailSendResult,
-} from '../ports/email-provider.js';
+} from '../ports/email-provider';
 
 /**
  * Records send attempts in memory and returns delivery=true for everything.

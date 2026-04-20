@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CuidSchema, IsoDateTimeSchema } from '../common/primitives.js';
+import { CuidSchema, IsoDateTimeSchema } from '../common/primitives';
 
 export const ReviewStatusSchema = z.enum(['PENDING', 'APPROVED', 'REJECTED']);
 export type ReviewStatus = z.infer<typeof ReviewStatusSchema>;

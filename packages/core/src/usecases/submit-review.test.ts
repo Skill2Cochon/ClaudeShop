@@ -7,9 +7,9 @@ import type {
   ReviewStatus,
   ReviewSummary,
 } from '@claudeshop/contracts/review';
-import type { ProductRepository } from '../ports/product-repository.js';
-import type { ReviewRepository } from '../ports/review-repository.js';
-import { moderateReview, submitReview } from './submit-review.js';
+import type { ProductRepository } from '../ports/product-repository';
+import type { ReviewRepository } from '../ports/review-repository';
+import { moderateReview, submitReview } from './submit-review';
 
 class StubProductRepository implements ProductRepository {
   private readonly products = new Map<string, Product>();

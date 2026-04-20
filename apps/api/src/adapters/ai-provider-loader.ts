@@ -1,5 +1,5 @@
 import { StubAIProvider, type AIProvider } from '@claudeshop/core';
-import { ClaudeAIProvider } from './claude-ai-provider.js';
+import { ClaudeAIProvider } from './claude-ai-provider';
 
 export interface AIProviderEnv {
   ANTHROPIC_API_KEY?: string;

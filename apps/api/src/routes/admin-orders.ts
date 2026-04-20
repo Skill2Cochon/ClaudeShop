@@ -18,7 +18,7 @@ import {
   OrderSchema,
   OrderStatusSchema,
 } from '@claudeshop/contracts/order';
-import { recordFromRequest } from '../audit/record.js';
+import { recordFromRequest } from '../audit/record';
 
 export interface AdminOrderRoutesDeps {
   orderRepo: OrderRepository;

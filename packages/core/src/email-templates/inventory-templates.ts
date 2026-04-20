@@ -1,10 +1,10 @@
-import type { InventoryProjection } from '../ports/inventory-repository.js';
+import type { InventoryProjection } from '../ports/inventory-repository';
 import {
   escape,
   wrapHtml,
   type BrandContext,
   type RenderedEmail,
-} from './render.js';
+} from './render';
 
 export interface LowStockTemplateContext {
   brand: BrandContext;

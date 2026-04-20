@@ -2,9 +2,9 @@ import { z } from 'zod';
 import { CuidSchema, MoneySchema } from '@claudeshop/contracts/common';
 import type { Order } from '@claudeshop/contracts/order';
 import { InventoryError, NotFoundError, PaymentError, ValidationError } from '@claudeshop/errors';
-import type { InventoryRepository, StockReservation } from '../ports/inventory-repository.js';
-import type { OrderRepository } from '../ports/order-repository.js';
-import type { PaymentProvider } from '../ports/payment-provider.js';
+import type { InventoryRepository, StockReservation } from '../ports/inventory-repository';
+import type { OrderRepository } from '../ports/order-repository';
+import type { PaymentProvider } from '../ports/payment-provider';
 
 export const RefundReasonSchema = z.enum([
   'duplicate',

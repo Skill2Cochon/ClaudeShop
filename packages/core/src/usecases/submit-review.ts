@@ -4,8 +4,8 @@ import {
   type Review,
 } from '@claudeshop/contracts/review';
 import { NotFoundError, ValidationError } from '@claudeshop/errors';
-import type { ProductRepository } from '../ports/product-repository.js';
-import type { ReviewRepository } from '../ports/review-repository.js';
+import type { ProductRepository } from '../ports/product-repository';
+import type { ReviewRepository } from '../ports/review-repository';
 
 export interface SubmitReviewDeps {
   tenantId: string;

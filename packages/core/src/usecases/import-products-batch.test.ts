@@ -1,9 +1,9 @@
 import { describe, expect, it, beforeEach } from 'vitest';
 import type { CreateProductInput, Product } from '@claudeshop/contracts/product';
 import { ValidationError } from '@claudeshop/errors';
-import type { ProductRepository } from '../ports/product-repository.js';
-import type { Clock } from '../ports/clock.js';
-import { importProductsBatch } from './import-products-batch.js';
+import type { ProductRepository } from '../ports/product-repository';
+import type { Clock } from '../ports/clock';
+import { importProductsBatch } from './import-products-batch';
 
 class InMemoryProductRepository implements ProductRepository {
   readonly products = new Map<string, Product>();

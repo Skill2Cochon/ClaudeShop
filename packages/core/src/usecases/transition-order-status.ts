@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import type { Order, OrderStatus } from '@claudeshop/contracts/order';
 import { NotFoundError, ValidationError } from '@claudeshop/errors';
-import type { OrderRepository } from '../ports/order-repository.js';
-import type { InventoryRepository } from '../ports/inventory-repository.js';
+import type { OrderRepository } from '../ports/order-repository';
+import type { InventoryRepository } from '../ports/inventory-repository';
 
 export const TransitionOrderStatusInputSchema = z.object({
   orderId: z.string().min(1),

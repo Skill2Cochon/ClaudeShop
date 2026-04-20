@@ -1,6 +1,6 @@
 import type { Logger } from '@claudeshop/telemetry';
 import type { EventBus } from '@claudeshop/events';
-import type { ModuleManifest } from './manifest.js';
+import type { ModuleManifest } from './manifest';
 
 /**
  * Context objects passed to each lifecycle hook.

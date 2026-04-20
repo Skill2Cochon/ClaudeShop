@@ -2,9 +2,9 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import type { Cart, CartItem } from '@claudeshop/contracts/cart';
 import type { Variant } from '@claudeshop/contracts/product';
 import { InventoryError, NotFoundError, ValidationError } from '@claudeshop/errors';
-import type { CartRepository } from '../ports/cart-repository.js';
-import type { VariantRepository } from '../ports/variant-repository.js';
-import { addToCart } from './add-to-cart.js';
+import type { CartRepository } from '../ports/cart-repository';
+import type { VariantRepository } from '../ports/variant-repository';
+import { addToCart } from './add-to-cart';
 
 /** In-memory implementations for deterministic TDD. */
 

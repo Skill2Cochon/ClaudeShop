@@ -1,12 +1,12 @@
 import type { FastifyInstance } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { z } from 'zod';
-import type { ModuleRegistry } from '../modules/registry.js';
+import type { ModuleRegistry } from '../modules/registry';
 import type {
   AuditLogRepository,
   ModuleInstallationRepository,
 } from '@claudeshop/core';
-import { recordFromRequest } from '../audit/record.js';
+import { recordFromRequest } from '../audit/record';
 
 export interface AdminModuleRoutesDeps {
   registry: ModuleRegistry;

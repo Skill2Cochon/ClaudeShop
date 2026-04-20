@@ -1,4 +1,4 @@
-import type { WebhookEventRepository } from '../ports/webhook-event-repository.js';
+import type { WebhookEventRepository } from '../ports/webhook-event-repository';
 
 export class InMemoryWebhookEventRepository implements WebhookEventRepository {
   private readonly processed = new Set<string>();

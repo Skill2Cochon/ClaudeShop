@@ -1,27 +1,27 @@
-export type { ProductRepository } from './product-repository.js';
+export type { ProductRepository } from './product-repository';
 export type {
   VariantRepository,
   VariantSummary,
   UpsertPriceSetInput,
-} from './variant-repository.js';
-export type { CartRepository } from './cart-repository.js';
-export type { OrderRepository, ListOrdersOptions } from './order-repository.js';
+} from './variant-repository';
+export type { CartRepository } from './cart-repository';
+export type { OrderRepository, ListOrdersOptions } from './order-repository';
 export type {
   OrderNoteRepository,
   AppendOrderNoteInput,
   ListOrderNotesOptions,
-} from './order-note-repository.js';
+} from './order-note-repository';
 export type {
   CustomerNoteRepository,
   AppendCustomerNoteInput,
   ListCustomerNotesOptions,
-} from './customer-note-repository.js';
-export type { CustomerAddressRepository } from './customer-address-repository.js';
+} from './customer-note-repository';
+export type { CustomerAddressRepository } from './customer-address-repository';
 export type {
   CustomerRepository,
   SegmentMember,
   ListCustomersOptions,
-} from './customer-repository.js';
+} from './customer-repository';
 export type {
   InventoryRepository,
   StockReservation,
@@ -30,15 +30,15 @@ export type {
   InventorySummary,
   AdjustStockInput,
   SetSafetyStockInput,
-} from './inventory-repository.js';
+} from './inventory-repository';
 export type {
   AuditLogRepository,
   AuditLogEntry,
   AppendAuditLogInput,
   AuditActorType,
   ListAuditLogsOptions,
-} from './audit-log-repository.js';
-export type { IdempotencyStore, IdempotencyRecord } from './idempotency-store.js';
+} from './audit-log-repository';
+export type { IdempotencyStore, IdempotencyRecord } from './idempotency-store';
 export type {
   PaymentProvider,
   PaymentProviderEvent,
@@ -46,34 +46,34 @@ export type {
   CreateIntentResult,
   RefundInput,
   RefundResult,
-} from './payment-provider.js';
-export type { PaymentRepository, CreatePaymentInput } from './payment-repository.js';
-export type { WebhookEventRepository } from './webhook-event-repository.js';
+} from './payment-provider';
+export type { PaymentRepository, CreatePaymentInput } from './payment-repository';
+export type { WebhookEventRepository } from './webhook-event-repository';
 export type {
   ModuleInstallationRepository,
   ModuleInstallation,
   ModuleStatus,
-} from './module-installation-repository.js';
-export type { Clock } from './clock.js';
-export { SystemClock } from './clock.js';
+} from './module-installation-repository';
+export type { Clock } from './clock';
+export { SystemClock } from './clock';
 export type {
   AIProvider,
   GenerateProductCopyInput,
   LocalizedProductCopy,
   ProductCopyResult,
-} from './ai-provider.js';
+} from './ai-provider';
 export type {
   EmbeddingProvider,
   EmbedOneInput,
   EmbedManyInput,
   EmbeddingResult,
   BatchEmbeddingResult,
-} from './embedding-provider.js';
+} from './embedding-provider';
 export type {
   SearchRepository,
   UpsertProductEmbeddingInput,
   ProductSearchHit,
-} from './search-repository.js';
+} from './search-repository';
 export type {
   ChatProvider,
   ChatInput,
@@ -84,20 +84,20 @@ export type {
   ChatUsage,
   ToolDefinition,
   ToolInvoker,
-} from './chat-provider.js';
+} from './chat-provider';
 export type {
   AuthUserRepository,
   AuthUserWithHash,
   CreateAuthUserInput,
-} from './auth-user-repository.js';
-export type { PasswordHasher } from './password-hasher.js';
-export type { PageRepository } from './page-repository.js';
-export type { PromotionRepository } from './promotion-repository.js';
-export type { SupplierRepository } from './supplier-repository.js';
+} from './auth-user-repository';
+export type { PasswordHasher } from './password-hasher';
+export type { PageRepository } from './page-repository';
+export type { PromotionRepository } from './promotion-repository';
+export type { SupplierRepository } from './supplier-repository';
 export type {
   PurchaseOrderRepository,
   ReceivePurchaseOrderLinePatch,
-} from './purchase-order-repository.js';
+} from './purchase-order-repository';
 export type {
   AnalyticsRepository,
   InventoryHealth,
@@ -105,35 +105,35 @@ export type {
   RevenueSummary,
   RevenueWindow,
   TopProductRow,
-} from './analytics-repository.js';
-export type { TaxRateRepository } from './tax-rate-repository.js';
-export type { ShippingRateRepository } from './shipping-rate-repository.js';
-export type { CustomerSegmentRepository } from './customer-segment-repository.js';
-export type { EmailCampaignRepository } from './email-campaign-repository.js';
+} from './analytics-repository';
+export type { TaxRateRepository } from './tax-rate-repository';
+export type { ShippingRateRepository } from './shipping-rate-repository';
+export type { CustomerSegmentRepository } from './customer-segment-repository';
+export type { EmailCampaignRepository } from './email-campaign-repository';
 export type {
   EmailMessage,
   EmailProvider,
   EmailRecipient,
   EmailSendOutcome,
   EmailSendResult,
-} from './email-provider.js';
-export type { WebhookSubscriptionRepository } from './webhook-subscription-repository.js';
+} from './email-provider';
+export type { WebhookSubscriptionRepository } from './webhook-subscription-repository';
 export type {
   WebhookDeliveryRepository,
   CreateWebhookDeliveryInput,
   RecordAttemptInput,
-} from './webhook-delivery-repository.js';
-export type { HttpClient, HttpRequest, HttpResponse } from './http-client.js';
-export type { CategoryRepository } from './category-repository.js';
-export type { ReviewRepository } from './review-repository.js';
-export type { TenantSettingsRepository } from './tenant-settings-repository.js';
+} from './webhook-delivery-repository';
+export type { HttpClient, HttpRequest, HttpResponse } from './http-client';
+export type { CategoryRepository } from './category-repository';
+export type { ReviewRepository } from './review-repository';
+export type { TenantSettingsRepository } from './tenant-settings-repository';
 export type {
   WishlistRepository,
   WishlistEntry,
-} from './wishlist-repository.js';
+} from './wishlist-repository';
 export type {
   ApiKeyRepository,
   ApiKeyRow,
   ApiKeyVerified,
   CreateApiKeyInput,
-} from './api-key-repository.js';
+} from './api-key-repository';

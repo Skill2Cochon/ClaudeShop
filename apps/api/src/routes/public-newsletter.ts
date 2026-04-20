@@ -5,7 +5,7 @@ import type {
   AuditLogRepository,
   CustomerRepository,
 } from '@claudeshop/core';
-import { recordFromRequest } from '../audit/record.js';
+import { recordFromRequest } from '../audit/record';
 
 export interface PublicNewsletterRoutesDeps {
   customerRepo: CustomerRepository;

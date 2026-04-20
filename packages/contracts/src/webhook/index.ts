@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CuidSchema, IsoDateTimeSchema } from '../common/primitives.js';
+import { CuidSchema, IsoDateTimeSchema } from '../common/primitives';
 
 // --- SSRF guard ---------------------------------------------------------
 

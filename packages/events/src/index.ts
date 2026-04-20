@@ -1,3 +1,3 @@
-export { EventBus } from './bus.js';
-export { InMemoryEventBus } from './in-memory-bus.js';
-export type { EmitOpts, Handler, SubOpts, Unsubscribe } from './types.js';
+export { EventBus } from './bus';
+export { InMemoryEventBus } from './in-memory-bus';
+export type { EmitOpts, Handler, SubOpts, Unsubscribe } from './types';

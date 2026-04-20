@@ -1,9 +1,9 @@
 import { describe, expect, it, beforeEach } from 'vitest';
 import type { CreateProductInput, Product } from '@claudeshop/contracts/product';
 import { ConflictError, ValidationError } from '@claudeshop/errors';
-import type { ProductRepository } from '../ports/product-repository.js';
-import type { Clock } from '../ports/clock.js';
-import { createProduct } from './create-product.js';
+import type { ProductRepository } from '../ports/product-repository';
+import type { Clock } from '../ports/clock';
+import { createProduct } from './create-product';
 
 /** In-memory ProductRepository for TDD. */
 class InMemoryProductRepository implements ProductRepository {

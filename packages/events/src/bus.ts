@@ -1,5 +1,5 @@
 import type { TopicName } from '@claudeshop/contracts/events';
-import type { EmitOpts, Handler, SubOpts, TopicPayload, Unsubscribe } from './types.js';
+import type { EmitOpts, Handler, SubOpts, TopicPayload, Unsubscribe } from './types';
 
 /**
  * EventBus — typed pub/sub abstraction.

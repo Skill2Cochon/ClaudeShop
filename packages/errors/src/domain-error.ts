@@ -1,4 +1,4 @@
-import type { ApiErrorCode } from './envelope.js';
+import type { ApiErrorCode } from './envelope';
 
 /**
  * Base class for all domain errors. Carries a machine-readable code,

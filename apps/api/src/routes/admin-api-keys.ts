@@ -7,7 +7,7 @@ import {
   type AuditLogRepository,
   type PasswordHasher,
 } from '@claudeshop/core';
-import { recordFromRequest } from '../audit/record.js';
+import { recordFromRequest } from '../audit/record';
 
 export interface AdminApiKeyRoutesDeps {
   apiKeyRepo: ApiKeyRepository;

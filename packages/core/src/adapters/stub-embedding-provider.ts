@@ -5,7 +5,7 @@ import type {
   EmbedManyInput,
   EmbeddingResult,
   BatchEmbeddingResult,
-} from '../ports/embedding-provider.js';
+} from '../ports/embedding-provider';
 
 /**
  * Deterministic, hash-based embedding provider. Produces fake but stable

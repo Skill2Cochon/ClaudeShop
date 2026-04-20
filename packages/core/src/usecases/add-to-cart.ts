@@ -1,7 +1,7 @@
 import { AddToCartInputSchema, type AddToCartInput, type Cart } from '@claudeshop/contracts/cart';
 import { InventoryError, NotFoundError, ValidationError } from '@claudeshop/errors';
-import type { CartRepository } from '../ports/cart-repository.js';
-import type { VariantRepository } from '../ports/variant-repository.js';
+import type { CartRepository } from '../ports/cart-repository';
+import type { VariantRepository } from '../ports/variant-repository';
 
 export interface AddToCartDeps {
   tenantId: string;

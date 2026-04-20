@@ -1,7 +1,7 @@
 import { defineModule } from '@claudeshop/module-kit';
 import manifest from '../claudeshop.json' with { type: 'json' };
-import { StripePaymentProvider } from './provider.js';
-import { StripeModuleSettingsSchema, type StripeModuleSettings } from './settings.js';
+import { StripePaymentProvider } from './provider';
+import { StripeModuleSettingsSchema, type StripeModuleSettings } from './settings';
 
 /**
  * Module entry point. The runtime calls `defineModule` at startup, then
@@ -48,5 +48,5 @@ export function createStripeProvider(settings: StripeModuleSettings): StripePaym
   return new StripePaymentProvider(parsed);
 }
 
-export { StripePaymentProvider } from './provider.js';
-export { StripeModuleSettingsSchema, type StripeModuleSettings } from './settings.js';
+export { StripePaymentProvider } from './provider';
+export { StripeModuleSettingsSchema, type StripeModuleSettings } from './settings';

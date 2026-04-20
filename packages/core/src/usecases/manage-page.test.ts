@@ -6,9 +6,9 @@ import type {
   PageStatus,
   UpdatePageInput,
 } from '@claudeshop/contracts/page';
-import type { PageRepository } from '../ports/page-repository.js';
-import type { Clock } from '../ports/clock.js';
-import { createPage, updatePage, deletePage } from './manage-page.js';
+import type { PageRepository } from '../ports/page-repository';
+import type { Clock } from '../ports/clock';
+import { createPage, updatePage, deletePage } from './manage-page';
 
 class InMemoryPageRepository implements PageRepository {
   private readonly pages = new Map<string, Page>();

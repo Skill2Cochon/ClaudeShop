@@ -10,9 +10,9 @@
  * fakes) ship under `adapters/`.
  */
 
-export * from './ports/index.js';
-export * from './usecases/index.js';
-export * from './adapters/index.js';
-export * from './copilot/index.js';
-export * from './utils/index.js';
-export * from './email-templates/index.js';
+export * from './ports/index';
+export * from './usecases/index';
+export * from './adapters/index';
+export * from './copilot/index';
+export * from './utils/index';
+export * from './email-templates/index';

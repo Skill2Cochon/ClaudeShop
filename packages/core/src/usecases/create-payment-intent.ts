@@ -2,9 +2,9 @@ import { z } from 'zod';
 import { CuidSchema } from '@claudeshop/contracts/common';
 import type { Order } from '@claudeshop/contracts/order';
 import { NotFoundError, PaymentError, ValidationError } from '@claudeshop/errors';
-import type { OrderRepository } from '../ports/order-repository.js';
-import type { PaymentProvider } from '../ports/payment-provider.js';
-import type { PaymentRepository } from '../ports/payment-repository.js';
+import type { OrderRepository } from '../ports/order-repository';
+import type { PaymentProvider } from '../ports/payment-provider';
+import type { PaymentRepository } from '../ports/payment-repository';
 
 export const CreatePaymentIntentInputSchema = z.object({
   orderId: CuidSchema,

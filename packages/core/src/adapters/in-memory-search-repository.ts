@@ -2,7 +2,7 @@ import type {
   ProductSearchHit,
   SearchRepository,
   UpsertProductEmbeddingInput,
-} from '../ports/search-repository.js';
+} from '../ports/search-repository';
 
 interface StoredEmbedding {
   tenantId: string;

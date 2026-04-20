@@ -1,15 +1,15 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { Order, OrderStatus } from '@claudeshop/contracts/order';
 import { NotFoundError, PaymentError, ValidationError } from '@claudeshop/errors';
-import type { InventoryRepository, StockReservation } from '../ports/inventory-repository.js';
-import type { OrderRepository } from '../ports/order-repository.js';
+import type { InventoryRepository, StockReservation } from '../ports/inventory-repository';
+import type { OrderRepository } from '../ports/order-repository';
 import type {
   PaymentProvider,
   PaymentProviderEvent,
   RefundInput,
   RefundResult,
-} from '../ports/payment-provider.js';
-import { refundPayment } from './refund-payment.js';
+} from '../ports/payment-provider';
+import { refundPayment } from './refund-payment';
 
 class StubOrderRepository implements OrderRepository {
   public readonly orders = new Map<string, Order>();

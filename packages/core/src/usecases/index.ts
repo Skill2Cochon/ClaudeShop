@@ -1,13 +1,13 @@
-export { createProduct, type CreateProductDeps } from './create-product.js';
-export { addToCart, type AddToCartDeps } from './add-to-cart.js';
-export { placeOrder, type PlaceOrderDeps } from './place-order.js';
+export { createProduct, type CreateProductDeps } from './create-product';
+export { addToCart, type AddToCartDeps } from './add-to-cart';
+export { placeOrder, type PlaceOrderDeps } from './place-order';
 export {
   createPaymentIntent,
   type CreatePaymentIntentDeps,
   type CreatePaymentIntentInput,
   type CreatePaymentIntentResult,
   CreatePaymentIntentInputSchema,
-} from './create-payment-intent.js';
+} from './create-payment-intent';
 export {
   refundPayment,
   type RefundPaymentDeps,
@@ -15,48 +15,48 @@ export {
   type RefundPaymentResult,
   RefundPaymentInputSchema,
   RefundReasonSchema,
-} from './refund-payment.js';
+} from './refund-payment';
 export {
   generateProductCopy,
   type GenerateProductCopyDeps,
   type GenerateProductCopyUseCaseInput,
   GenerateProductCopyUseCaseInputSchema,
-} from './generate-product-copy.js';
+} from './generate-product-copy';
 export {
   indexProductEmbedding,
   type IndexProductEmbeddingDeps,
   type IndexProductEmbeddingInput,
   type IndexProductEmbeddingResult,
   IndexProductEmbeddingInputSchema,
-} from './index-product-embedding.js';
+} from './index-product-embedding';
 export {
   searchProducts,
   type SearchProductsDeps,
   type SearchProductsInput,
   type SearchProductsResult,
   SearchProductsInputSchema,
-} from './search-products.js';
+} from './search-products';
 export {
   findRelatedProducts,
   type FindRelatedProductsDeps,
   type FindRelatedProductsInput,
   type FindRelatedProductsResult,
   FindRelatedProductsInputSchema,
-} from './find-related-products.js';
+} from './find-related-products';
 export {
   authenticateUser,
   type AuthenticateUserDeps,
-} from './authenticate-user.js';
+} from './authenticate-user';
 export {
   registerUser,
   type RegisterUserDeps,
-} from './register-user.js';
+} from './register-user';
 export {
   changePassword,
   type ChangePasswordDeps,
   type ChangePasswordInput,
   ChangePasswordInputSchema,
-} from './change-password.js';
+} from './change-password';
 export {
   createPage,
   updatePage,
@@ -64,42 +64,42 @@ export {
   type CreatePageDeps,
   type UpdatePageDeps,
   type DeletePageDeps,
-} from './manage-page.js';
-export { applyPromotion, type ApplyPromotionDeps } from './apply-promotion.js';
+} from './manage-page';
+export { applyPromotion, type ApplyPromotionDeps } from './apply-promotion';
 export {
   createPurchaseOrder,
   type CreatePurchaseOrderDeps,
-} from './create-purchase-order.js';
+} from './create-purchase-order';
 export {
   receivePurchaseOrder,
   type ReceivePurchaseOrderDeps,
-} from './receive-purchase-order.js';
+} from './receive-purchase-order';
 export {
   computeSegmentMembers,
   type ComputeSegmentMembersDeps,
   type ComputeSegmentMembersResult,
-} from './compute-segment-members.js';
+} from './compute-segment-members';
 export {
   sendEmailCampaign,
   type SendEmailCampaignDeps,
-} from './send-email-campaign.js';
+} from './send-email-campaign';
 export {
   dispatchWebhookEvent,
   type DispatchWebhookEventDeps,
   type DispatchWebhookEventInput,
   type DispatchWebhookEventResult,
-} from './dispatch-webhook-event.js';
+} from './dispatch-webhook-event';
 export {
   redeliverWebhook,
   type RedeliverWebhookDeps,
   type RedeliverWebhookInput,
-} from './redeliver-webhook.js';
+} from './redeliver-webhook';
 export {
   submitReview,
   moderateReview,
   type SubmitReviewDeps,
   type ModerateReviewDeps,
-} from './submit-review.js';
+} from './submit-review';
 export {
   importProductsBatch,
   type ImportProductsBatchDeps,
@@ -107,26 +107,26 @@ export {
   type ImportProductsBatchResult,
   type RowResult,
   ImportProductsBatchInputSchema,
-} from './import-products-batch.js';
+} from './import-products-batch';
 export {
   transitionOrderStatus,
   type TransitionOrderStatusDeps,
   type TransitionOrderStatusInput,
   TransitionOrderStatusInputSchema,
-} from './transition-order-status.js';
+} from './transition-order-status';
 export {
   sendOrderTransactional,
   type OrderTransactionalKind,
   type SendOrderTransactionalDeps,
   type SendOrderTransactionalInput,
   OrderTransactionalKindSchema,
-} from './send-order-transactional.js';
+} from './send-order-transactional';
 export {
   sendLowStockDigest,
   type SendLowStockDigestDeps,
   type SendLowStockDigestInput,
   type SendLowStockDigestResult,
-} from './send-low-stock-digest.js';
+} from './send-low-stock-digest';
 export {
   mintApiKey,
   extractApiKeyPrefix,
@@ -134,5 +134,5 @@ export {
   type MintApiKeyDeps,
   type MintApiKeyInput,
   type MintApiKeyResult,
-} from './mint-api-key.js';
-export { verifyApiKey, type VerifyApiKeyDeps } from './verify-api-key.js';
+} from './mint-api-key';
+export { verifyApiKey, type VerifyApiKeyDeps } from './verify-api-key';

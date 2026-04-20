@@ -11,7 +11,7 @@ import {
   CustomerNoteSchema,
 } from '@claudeshop/contracts/customer';
 import { NotFoundError } from '@claudeshop/errors';
-import { recordFromRequest } from '../audit/record.js';
+import { recordFromRequest } from '../audit/record';
 
 export interface AdminCustomerNoteRoutesDeps {
   customerNoteRepo: CustomerNoteRepository;

@@ -4,7 +4,7 @@ import type {
   PaymentProvider,
 } from '@claudeshop/core';
 import type { FastifyBaseLogger } from 'fastify';
-import { StubPaymentProvider } from '../adapters/stub-payment-provider.js';
+import { StubPaymentProvider } from '../adapters/stub-payment-provider';
 
 /** Known module ids registered at build-time. Phase 3.2 dynamic discovery. */
 export const KNOWN_MODULES = {

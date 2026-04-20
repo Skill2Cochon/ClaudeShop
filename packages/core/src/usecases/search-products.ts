@@ -1,10 +1,10 @@
 import { z } from 'zod';
 import { ValidationError } from '@claudeshop/errors';
-import type { EmbeddingProvider } from '../ports/embedding-provider.js';
+import type { EmbeddingProvider } from '../ports/embedding-provider';
 import type {
   ProductSearchHit,
   SearchRepository,
-} from '../ports/search-repository.js';
+} from '../ports/search-repository';
 
 export const SearchProductsInputSchema = z.object({
   query: z.string().trim().min(1, 'query must not be empty'),

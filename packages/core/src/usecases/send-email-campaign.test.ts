@@ -13,12 +13,12 @@ import type {
 import type {
   CustomerRepository,
   SegmentMember,
-} from '../ports/customer-repository.js';
-import type { CustomerSegmentRepository } from '../ports/customer-segment-repository.js';
-import type { EmailCampaignRepository } from '../ports/email-campaign-repository.js';
-import type { Clock } from '../ports/clock.js';
-import { StubEmailProvider } from '../adapters/stub-email-provider.js';
-import { sendEmailCampaign } from './send-email-campaign.js';
+} from '../ports/customer-repository';
+import type { CustomerSegmentRepository } from '../ports/customer-segment-repository';
+import type { EmailCampaignRepository } from '../ports/email-campaign-repository';
+import type { Clock } from '../ports/clock';
+import { StubEmailProvider } from '../adapters/stub-email-provider';
+import { sendEmailCampaign } from './send-email-campaign';
 
 class InMemorySegmentRepo implements CustomerSegmentRepository {
   private readonly rows = new Map<string, CustomerSegment>();

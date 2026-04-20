@@ -11,7 +11,7 @@ import {
   OrderNoteSchema,
 } from '@claudeshop/contracts/order';
 import { NotFoundError } from '@claudeshop/errors';
-import { recordFromRequest } from '../audit/record.js';
+import { recordFromRequest } from '../audit/record';
 
 export interface AdminOrderNoteRoutesDeps {
   orderNoteRepo: OrderNoteRepository;

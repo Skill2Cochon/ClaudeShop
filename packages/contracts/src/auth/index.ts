@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CuidSchema, IsoDateTimeSchema } from '../common/primitives.js';
+import { CuidSchema, IsoDateTimeSchema } from '../common/primitives';
 
 export const UserRoleSchema = z.enum(['OWNER', 'ADMIN', 'STAFF', 'CUSTOMER']);
 export type UserRole = z.infer<typeof UserRoleSchema>;

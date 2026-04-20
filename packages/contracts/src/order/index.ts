@@ -4,7 +4,7 @@ import {
   MoneySchema,
   CurrencyCodeSchema,
   IsoDateTimeSchema,
-} from '../common/primitives.js';
+} from '../common/primitives';
 
 export const OrderStatusSchema = z.enum([
   'DRAFT',

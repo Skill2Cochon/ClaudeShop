@@ -1,13 +1,13 @@
 import { describe, expect, it, beforeEach } from 'vitest';
 import type { Product } from '@claudeshop/contracts/product';
 import { NotFoundError, ValidationError } from '@claudeshop/errors';
-import type { ProductRepository } from '../ports/product-repository.js';
+import type { ProductRepository } from '../ports/product-repository';
 import type {
   AIProvider,
   GenerateProductCopyInput,
   ProductCopyResult,
-} from '../ports/ai-provider.js';
-import { generateProductCopy } from './generate-product-copy.js';
+} from '../ports/ai-provider';
+import { generateProductCopy } from './generate-product-copy';
 
 /** Minimal ProductRepository stub — only the methods this use-case touches. */
 class StubProductRepository implements ProductRepository {

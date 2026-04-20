@@ -9,4 +9,4 @@
  *           GraphQL operations.
  */
 
-export { createClient, type ClaudeShopClient, type ClientOptions } from './client.js';
+export { createClient, type ClaudeShopClient, type ClientOptions } from './client';

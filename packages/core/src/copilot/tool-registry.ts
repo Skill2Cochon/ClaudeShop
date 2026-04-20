@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { ToolDefinition } from '../ports/chat-provider.js';
+import type { ToolDefinition } from '../ports/chat-provider';
 
 /**
  * A copilot tool is a Zod-validated input schema + a handler. The registry

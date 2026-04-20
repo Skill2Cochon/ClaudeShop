@@ -3,7 +3,7 @@ import {
   CuidSchema,
   CurrencyCodeSchema,
   IsoDateTimeSchema,
-} from '../common/primitives.js';
+} from '../common/primitives';
 
 const CountryCodeSchema = z.string().length(2).regex(/^[A-Z]{2}$/);
 

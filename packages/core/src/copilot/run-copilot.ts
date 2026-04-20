@@ -4,8 +4,8 @@ import type {
   ChatMessage,
   ChatProvider,
   ChatResult,
-} from '../ports/chat-provider.js';
-import type { CopilotToolRegistry } from './tool-registry.js';
+} from '../ports/chat-provider';
+import type { CopilotToolRegistry } from './tool-registry';
 
 export const RunCopilotInputSchema = z.object({
   message: z.string().trim().min(1, 'message must not be empty'),

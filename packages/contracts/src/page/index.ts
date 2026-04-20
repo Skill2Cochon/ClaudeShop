@@ -3,8 +3,8 @@ import {
   CuidSchema,
   IsoDateTimeSchema,
   SlugSchema,
-} from '../common/primitives.js';
-import { LocalizedStringSchema } from '../common/i18n.js';
+} from '../common/primitives';
+import { LocalizedStringSchema } from '../common/i18n';
 
 export const PageStatusSchema = z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']);
 export type PageStatus = z.infer<typeof PageStatusSchema>;

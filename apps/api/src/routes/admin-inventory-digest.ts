@@ -8,7 +8,7 @@ import type {
   TenantSettingsRepository,
 } from '@claudeshop/core';
 import { sendLowStockDigest } from '@claudeshop/core';
-import { recordFromRequest } from '../audit/record.js';
+import { recordFromRequest } from '../audit/record';
 
 export interface AdminInventoryDigestRoutesDeps {
   inventoryRepo: InventoryRepository;

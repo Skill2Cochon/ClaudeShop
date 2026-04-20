@@ -1,10 +1,10 @@
 import { describe, expect, it, beforeEach } from 'vitest';
 import { NotFoundError, ValidationError } from '@claudeshop/errors';
 import type { Product } from '@claudeshop/contracts/product';
-import type { ProductRepository } from '../ports/product-repository.js';
-import { InMemorySearchRepository } from '../adapters/in-memory-search-repository.js';
-import { StubEmbeddingProvider } from '../adapters/stub-embedding-provider.js';
-import { findRelatedProducts } from './find-related-products.js';
+import type { ProductRepository } from '../ports/product-repository';
+import { InMemorySearchRepository } from '../adapters/in-memory-search-repository';
+import { StubEmbeddingProvider } from '../adapters/stub-embedding-provider';
+import { findRelatedProducts } from './find-related-products';
 
 class StubProductRepository implements ProductRepository {
   private readonly products = new Map<string, Product>();

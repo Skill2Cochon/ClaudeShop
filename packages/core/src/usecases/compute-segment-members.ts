@@ -1,7 +1,7 @@
 import { NotFoundError } from '@claudeshop/errors';
-import type { CustomerRepository } from '../ports/customer-repository.js';
-import type { CustomerSegmentRepository } from '../ports/customer-segment-repository.js';
-import type { Clock } from '../ports/clock.js';
+import type { CustomerRepository } from '../ports/customer-repository';
+import type { CustomerSegmentRepository } from '../ports/customer-segment-repository';
+import type { Clock } from '../ports/clock';
 
 export interface ComputeSegmentMembersDeps {
   tenantId: string;

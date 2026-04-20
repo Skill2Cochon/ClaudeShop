@@ -5,8 +5,8 @@ import {
   type Promotion,
 } from '@claudeshop/contracts/promotion';
 import { NotFoundError, ValidationError } from '@claudeshop/errors';
-import type { PromotionRepository } from '../ports/promotion-repository.js';
-import type { Clock } from '../ports/clock.js';
+import type { PromotionRepository } from '../ports/promotion-repository';
+import type { Clock } from '../ports/clock';
 
 export interface ApplyPromotionDeps {
   tenantId: string;

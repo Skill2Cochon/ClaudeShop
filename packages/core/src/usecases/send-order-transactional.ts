@@ -2,14 +2,14 @@ import { z } from 'zod';
 import type { Order } from '@claudeshop/contracts/order';
 import type { TenantSettings } from '@claudeshop/contracts/tenant-settings';
 import { ValidationError } from '@claudeshop/errors';
-import type { EmailProvider } from '../ports/email-provider.js';
+import type { EmailProvider } from '../ports/email-provider';
 import {
   renderOrderCancelled,
   renderOrderPlaced,
   renderOrderRefunded,
   renderOrderShipped,
   type BrandContext,
-} from '../email-templates/index.js';
+} from '../email-templates/index';
 
 export const OrderTransactionalKindSchema = z.enum([
   'placed',

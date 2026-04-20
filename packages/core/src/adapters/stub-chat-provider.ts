@@ -3,7 +3,7 @@ import type {
   ChatProvider,
   ChatResult,
   ChatToolInvocation,
-} from '../ports/chat-provider.js';
+} from '../ports/chat-provider';
 
 /**
  * Deterministic stub ChatProvider for tests and dev-without-API-key.

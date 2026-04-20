@@ -4,7 +4,7 @@ export {
   wrapHtml,
   type BrandContext,
   type RenderedEmail,
-} from './render.js';
+} from './render';
 export {
   renderOrderPlaced,
   renderOrderShipped,
@@ -12,8 +12,8 @@ export {
   renderOrderRefunded,
   type OrderTemplateContext,
   type RefundTemplateContext,
-} from './order-templates.js';
+} from './order-templates';
 export {
   renderLowStockDigest,
   type LowStockTemplateContext,
-} from './inventory-templates.js';
+} from './inventory-templates';

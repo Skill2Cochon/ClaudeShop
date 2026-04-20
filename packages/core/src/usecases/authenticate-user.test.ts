@@ -5,11 +5,11 @@ import type {
   AuthUserRepository,
   AuthUserWithHash,
   CreateAuthUserInput,
-} from '../ports/auth-user-repository.js';
-import type { PasswordHasher } from '../ports/password-hasher.js';
-import type { Clock } from '../ports/clock.js';
-import { authenticateUser } from './authenticate-user.js';
-import { registerUser } from './register-user.js';
+} from '../ports/auth-user-repository';
+import type { PasswordHasher } from '../ports/password-hasher';
+import type { Clock } from '../ports/clock';
+import { authenticateUser } from './authenticate-user';
+import { registerUser } from './register-user';
 
 class InMemoryAuthUserRepository implements AuthUserRepository {
   private readonly users = new Map<string, AuthUserWithHash>();

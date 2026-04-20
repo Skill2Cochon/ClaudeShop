@@ -4,7 +4,7 @@ import {
   CurrencyCodeSchema,
   IsoDateTimeSchema,
   MoneySchema,
-} from '../common/primitives.js';
+} from '../common/primitives';
 
 // --- Suppliers ------------------------------------------------------------
 

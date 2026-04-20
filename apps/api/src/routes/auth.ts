@@ -11,7 +11,7 @@ import {
   type PasswordHasher,
 } from '@claudeshop/core';
 import { UserRoleSchema } from '@claudeshop/contracts/auth';
-import { recordFromRequest } from '../audit/record.js';
+import { recordFromRequest } from '../audit/record';
 
 export interface AuthRoutesDeps {
   authUserRepo: AuthUserRepository;

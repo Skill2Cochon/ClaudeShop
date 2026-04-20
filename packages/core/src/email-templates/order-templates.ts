@@ -5,7 +5,7 @@ import {
   wrapHtml,
   type BrandContext,
   type RenderedEmail,
-} from './render.js';
+} from './render';
 
 export interface OrderTemplateContext {
   brand: BrandContext;

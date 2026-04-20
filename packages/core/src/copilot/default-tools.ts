@@ -1,15 +1,15 @@
 import { z } from 'zod';
-import type { ProductRepository } from '../ports/product-repository.js';
-import type { OrderRepository } from '../ports/order-repository.js';
-import type { ModuleInstallationRepository } from '../ports/module-installation-repository.js';
-import type { EmbeddingProvider } from '../ports/embedding-provider.js';
-import type { SearchRepository } from '../ports/search-repository.js';
-import type { AIProvider } from '../ports/ai-provider.js';
-import type { AnalyticsRepository } from '../ports/analytics-repository.js';
-import { searchProducts } from '../usecases/search-products.js';
-import { generateProductCopy } from '../usecases/generate-product-copy.js';
-import { indexProductEmbedding } from '../usecases/index-product-embedding.js';
-import { CopilotToolRegistry } from './tool-registry.js';
+import type { ProductRepository } from '../ports/product-repository';
+import type { OrderRepository } from '../ports/order-repository';
+import type { ModuleInstallationRepository } from '../ports/module-installation-repository';
+import type { EmbeddingProvider } from '../ports/embedding-provider';
+import type { SearchRepository } from '../ports/search-repository';
+import type { AIProvider } from '../ports/ai-provider';
+import type { AnalyticsRepository } from '../ports/analytics-repository';
+import { searchProducts } from '../usecases/search-products';
+import { generateProductCopy } from '../usecases/generate-product-copy';
+import { indexProductEmbedding } from '../usecases/index-product-embedding';
+import { CopilotToolRegistry } from './tool-registry';
 
 export interface DefaultCopilotToolDeps {
   tenantId: string;

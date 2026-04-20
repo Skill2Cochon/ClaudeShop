@@ -1,8 +1,8 @@
 import { ValidationError, UnauthorizedError } from '@claudeshop/errors';
 import { LoginInputSchema, type AuthUser, type LoginInput } from '@claudeshop/contracts/auth';
-import type { AuthUserRepository } from '../ports/auth-user-repository.js';
-import type { PasswordHasher } from '../ports/password-hasher.js';
-import type { Clock } from '../ports/clock.js';
+import type { AuthUserRepository } from '../ports/auth-user-repository';
+import type { PasswordHasher } from '../ports/password-hasher';
+import type { Clock } from '../ports/clock';
 
 export interface AuthenticateUserDeps {
   tenantId: string;

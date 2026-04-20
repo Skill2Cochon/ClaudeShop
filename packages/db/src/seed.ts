@@ -8,7 +8,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import bcrypt from 'bcryptjs';
-import { createPrismaClient, withTenant } from './client.js';
+import { createPrismaClient, withTenant } from './client';
 
 const DEMO_ADMIN_EMAIL = 'demo@claudeshop.local';
 const DEMO_ADMIN_PASSWORD = 'demo-admin-1234';

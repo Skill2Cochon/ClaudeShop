@@ -1,14 +1,14 @@
 import { PlaceOrderInputSchema, type Order, type PlaceOrderInput } from '@claudeshop/contracts/order';
 import { NotFoundError, ValidationError } from '@claudeshop/errors';
-import type { CartRepository } from '../ports/cart-repository.js';
-import type { InventoryRepository, StockReservation } from '../ports/inventory-repository.js';
-import type { OrderRepository } from '../ports/order-repository.js';
-import type { VariantRepository } from '../ports/variant-repository.js';
-import type { ShippingRateRepository } from '../ports/shipping-rate-repository.js';
-import type { TaxRateRepository } from '../ports/tax-rate-repository.js';
-import type { PromotionRepository } from '../ports/promotion-repository.js';
-import { SystemClock, type Clock } from '../ports/clock.js';
-import { applyPromotion } from './apply-promotion.js';
+import type { CartRepository } from '../ports/cart-repository';
+import type { InventoryRepository, StockReservation } from '../ports/inventory-repository';
+import type { OrderRepository } from '../ports/order-repository';
+import type { VariantRepository } from '../ports/variant-repository';
+import type { ShippingRateRepository } from '../ports/shipping-rate-repository';
+import type { TaxRateRepository } from '../ports/tax-rate-repository';
+import type { PromotionRepository } from '../ports/promotion-repository';
+import { SystemClock, type Clock } from '../ports/clock';
+import { applyPromotion } from './apply-promotion';
 
 export interface PlaceOrderDeps {
   tenantId: string;

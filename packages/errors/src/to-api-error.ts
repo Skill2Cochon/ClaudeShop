@@ -1,6 +1,6 @@
 import { ZodError } from 'zod';
-import { DomainError } from './domain-error.js';
-import { ApiErrorCode, type ApiError } from './envelope.js';
+import { DomainError } from './domain-error';
+import { ApiErrorCode, type ApiError } from './envelope';
 
 export function isDomainError(err: unknown): err is DomainError {
   return err instanceof DomainError;

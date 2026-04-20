@@ -4,8 +4,8 @@ import { ValidationError } from '@claudeshop/errors';
 import type {
   ApiKeyRepository,
   ApiKeyRow,
-} from '../ports/api-key-repository.js';
-import type { PasswordHasher } from '../ports/password-hasher.js';
+} from '../ports/api-key-repository';
+import type { PasswordHasher } from '../ports/password-hasher';
 
 export const MintApiKeyInputSchema = z.object({
   name: z.string().min(1).max(80),

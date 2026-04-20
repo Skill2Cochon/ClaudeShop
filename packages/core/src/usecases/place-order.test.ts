@@ -3,11 +3,11 @@ import type { Cart, CartItem } from '@claudeshop/contracts/cart';
 import type { Order, OrderStatus } from '@claudeshop/contracts/order';
 import type { Variant } from '@claudeshop/contracts/product';
 import { InventoryError, NotFoundError, ValidationError } from '@claudeshop/errors';
-import type { CartRepository } from '../ports/cart-repository.js';
-import type { InventoryRepository, StockReservation } from '../ports/inventory-repository.js';
-import type { OrderRepository } from '../ports/order-repository.js';
-import type { VariantRepository, VariantSummary } from '../ports/variant-repository.js';
-import { placeOrder } from './place-order.js';
+import type { CartRepository } from '../ports/cart-repository';
+import type { InventoryRepository, StockReservation } from '../ports/inventory-repository';
+import type { OrderRepository } from '../ports/order-repository';
+import type { VariantRepository, VariantSummary } from '../ports/variant-repository';
+import { placeOrder } from './place-order';
 
 /** In-memory repositories scoped to these tests. */
 

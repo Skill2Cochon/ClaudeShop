@@ -1,12 +1,12 @@
 import { z } from 'zod';
 import type { TenantSettings } from '@claudeshop/contracts/tenant-settings';
 import { ValidationError } from '@claudeshop/errors';
-import type { EmailProvider } from '../ports/email-provider.js';
+import type { EmailProvider } from '../ports/email-provider';
 import type {
   InventoryProjection,
   InventoryRepository,
-} from '../ports/inventory-repository.js';
-import { renderLowStockDigest } from '../email-templates/inventory-templates.js';
+} from '../ports/inventory-repository';
+import { renderLowStockDigest } from '../email-templates/inventory-templates';
 
 export interface SendLowStockDigestInput {
   /** Recipient address — falls back to settings.storefront.supportEmail. */

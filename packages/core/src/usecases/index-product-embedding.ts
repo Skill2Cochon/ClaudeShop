@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import type { Product } from '@claudeshop/contracts/product';
 import { NotFoundError, ValidationError } from '@claudeshop/errors';
-import type { ProductRepository } from '../ports/product-repository.js';
-import type { EmbeddingProvider } from '../ports/embedding-provider.js';
-import type { SearchRepository } from '../ports/search-repository.js';
+import type { ProductRepository } from '../ports/product-repository';
+import type { EmbeddingProvider } from '../ports/embedding-provider';
+import type { SearchRepository } from '../ports/search-repository';
 
 export const IndexProductEmbeddingInputSchema = z.object({
   productId: z.string().min(1),

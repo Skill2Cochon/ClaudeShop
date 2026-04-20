@@ -3,7 +3,7 @@ import type {
   GenerateProductCopyInput,
   LocalizedProductCopy,
   ProductCopyResult,
-} from '../ports/ai-provider.js';
+} from '../ports/ai-provider';
 
 /**
  * Deterministic StubAIProvider. Used in tests and in dev when no

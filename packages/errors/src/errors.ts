@@ -1,5 +1,5 @@
-import { DomainError } from './domain-error.js';
-import { ApiErrorCode } from './envelope.js';
+import { DomainError } from './domain-error';
+import { ApiErrorCode } from './envelope';
 
 export class NotFoundError extends DomainError {
   public readonly code = ApiErrorCode.NOT_FOUND;

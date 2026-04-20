@@ -4,7 +4,7 @@ import {
   CuidSchema,
   IsoDateTimeSchema,
   MoneySchema,
-} from '../common/primitives.js';
+} from '../common/primitives';
 
 export const PromotionTypeSchema = z.enum([
   'PERCENTAGE',

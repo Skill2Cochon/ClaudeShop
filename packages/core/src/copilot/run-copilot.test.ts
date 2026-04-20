@@ -5,10 +5,10 @@ import type {
   ChatInput,
   ChatProvider,
   ChatResult,
-} from '../ports/chat-provider.js';
-import { StubChatProvider } from '../adapters/stub-chat-provider.js';
-import { CopilotToolRegistry } from './tool-registry.js';
-import { runCopilot } from './run-copilot.js';
+} from '../ports/chat-provider';
+import { StubChatProvider } from '../adapters/stub-chat-provider';
+import { CopilotToolRegistry } from './tool-registry';
+import { runCopilot } from './run-copilot';
 
 /** Records the last ChatInput so tests can assert on system + tools + history. */
 class RecordingChatProvider implements ChatProvider {

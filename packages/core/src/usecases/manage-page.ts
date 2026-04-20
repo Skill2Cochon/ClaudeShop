@@ -6,8 +6,8 @@ import {
   type UpdatePageInput,
 } from '@claudeshop/contracts/page';
 import { ConflictError, NotFoundError, ValidationError } from '@claudeshop/errors';
-import type { PageRepository } from '../ports/page-repository.js';
-import type { Clock } from '../ports/clock.js';
+import type { PageRepository } from '../ports/page-repository';
+import type { Clock } from '../ports/clock';
 
 export interface CreatePageDeps {
   tenantId: string;

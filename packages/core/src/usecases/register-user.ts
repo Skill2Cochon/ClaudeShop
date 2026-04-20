@@ -5,8 +5,8 @@ import {
   type RegisterInput,
   type UserRole,
 } from '@claudeshop/contracts/auth';
-import type { AuthUserRepository } from '../ports/auth-user-repository.js';
-import type { PasswordHasher } from '../ports/password-hasher.js';
+import type { AuthUserRepository } from '../ports/auth-user-repository';
+import type { PasswordHasher } from '../ports/password-hasher';
 
 export interface RegisterUserDeps {
   tenantId: string;

@@ -8,7 +8,7 @@ import type {
   RefundResult,
 } from '@claudeshop/core';
 import { PaymentError } from '@claudeshop/errors';
-import type { StripeModuleSettings } from './settings.js';
+import type { StripeModuleSettings } from './settings';
 
 /**
  * Stripe PaymentProvider adapter.

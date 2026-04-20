@@ -9,7 +9,7 @@ import {
   TenantSettingsPatchSchema,
   TenantSettingsSchema,
 } from '@claudeshop/contracts/tenant-settings';
-import { recordFromRequest } from '../audit/record.js';
+import { recordFromRequest } from '../audit/record';
 
 export interface AdminSettingsRoutesDeps {
   settingsRepo: TenantSettingsRepository;

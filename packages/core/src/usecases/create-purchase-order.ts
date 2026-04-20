@@ -4,9 +4,9 @@ import {
   type PurchaseOrder,
 } from '@claudeshop/contracts/erp';
 import { NotFoundError, ValidationError } from '@claudeshop/errors';
-import type { PurchaseOrderRepository } from '../ports/purchase-order-repository.js';
-import type { SupplierRepository } from '../ports/supplier-repository.js';
-import type { Clock } from '../ports/clock.js';
+import type { PurchaseOrderRepository } from '../ports/purchase-order-repository';
+import type { SupplierRepository } from '../ports/supplier-repository';
+import type { Clock } from '../ports/clock';
 
 export interface CreatePurchaseOrderDeps {
   tenantId: string;

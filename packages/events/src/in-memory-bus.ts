@@ -1,7 +1,7 @@
 import { EventEmitter } from 'eventemitter3';
 import { EVENT_TOPICS, type TopicName } from '@claudeshop/contracts/events';
-import { EventBus } from './bus.js';
-import type { EmitOpts, Handler, SubOpts, TopicPayload, Unsubscribe } from './types.js';
+import { EventBus } from './bus';
+import type { EmitOpts, Handler, SubOpts, TopicPayload, Unsubscribe } from './types';
 
 /**
  * In-process EventBus implementation. Useful for dev, tests, and sync topics.

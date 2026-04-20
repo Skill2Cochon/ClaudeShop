@@ -1,10 +1,10 @@
 import { z } from 'zod';
 import { NotFoundError, ValidationError } from '@claudeshop/errors';
-import type { ProductRepository } from '../ports/product-repository.js';
+import type { ProductRepository } from '../ports/product-repository';
 import type {
   ProductSearchHit,
   SearchRepository,
-} from '../ports/search-repository.js';
+} from '../ports/search-repository';
 
 export const FindRelatedProductsInputSchema = z.object({
   productId: z.string().min(1, 'productId must not be empty'),

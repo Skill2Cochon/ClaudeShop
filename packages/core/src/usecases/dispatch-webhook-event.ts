@@ -1,9 +1,9 @@
 import { createHmac } from 'node:crypto';
 import type { WebhookDelivery } from '@claudeshop/contracts/webhook';
-import type { HttpClient } from '../ports/http-client.js';
-import type { WebhookDeliveryRepository } from '../ports/webhook-delivery-repository.js';
-import type { WebhookSubscriptionRepository } from '../ports/webhook-subscription-repository.js';
-import type { Clock } from '../ports/clock.js';
+import type { HttpClient } from '../ports/http-client';
+import type { WebhookDeliveryRepository } from '../ports/webhook-delivery-repository';
+import type { WebhookSubscriptionRepository } from '../ports/webhook-subscription-repository';
+import type { Clock } from '../ports/clock';
 
 export interface DispatchWebhookEventInput {
   /** Topic name — e.g. "order.placed" or "payment.captured". */

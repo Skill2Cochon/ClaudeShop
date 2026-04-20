@@ -1,4 +1,4 @@
-import type { IdempotencyRecord, IdempotencyStore } from '../ports/idempotency-store.js';
+import type { IdempotencyRecord, IdempotencyStore } from '../ports/idempotency-store';
 
 /**
  * In-memory IdempotencyStore for tests and single-instance dev deployments.

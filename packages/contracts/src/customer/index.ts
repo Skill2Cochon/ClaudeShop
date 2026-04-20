@@ -4,7 +4,7 @@ import {
   EmailSchema,
   CountryCodeSchema,
   IsoDateTimeSchema,
-} from '../common/primitives.js';
+} from '../common/primitives';
 
 export const AddressSchema = z.object({
   id: CuidSchema,

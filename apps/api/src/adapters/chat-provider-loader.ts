@@ -1,5 +1,5 @@
 import { StubChatProvider, type ChatProvider } from '@claudeshop/core';
-import { ClaudeChatProvider } from './claude-chat-provider.js';
+import { ClaudeChatProvider } from './claude-chat-provider';
 
 export interface ChatProviderEnv {
   ANTHROPIC_API_KEY?: string;

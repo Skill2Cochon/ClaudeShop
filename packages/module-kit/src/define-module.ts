@@ -1,5 +1,5 @@
-import { ModuleManifestSchema, type ModuleManifest } from './manifest.js';
-import type { ModuleLifecycle } from './lifecycle.js';
+import { ModuleManifestSchema, type ModuleManifest } from './manifest';
+import type { ModuleLifecycle } from './lifecycle';
 
 export interface ModuleDefinition {
   manifest: ModuleManifest;

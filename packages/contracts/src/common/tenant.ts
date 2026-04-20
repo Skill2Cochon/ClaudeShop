@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CuidSchema, SlugSchema } from './primitives.js';
+import { CuidSchema, SlugSchema } from './primitives';
 
 export const TenantPlanSchema = z.enum(['free', 'pro', 'business', 'enterprise']);
 

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { NotFoundError, ValidationError } from '@claudeshop/errors';
-import type { AuthUserRepository } from '../ports/auth-user-repository.js';
-import type { PasswordHasher } from '../ports/password-hasher.js';
+import type { AuthUserRepository } from '../ports/auth-user-repository';
+import type { PasswordHasher } from '../ports/password-hasher';
 
 export const ChangePasswordInputSchema = z.object({
   userId: z.string().min(1),

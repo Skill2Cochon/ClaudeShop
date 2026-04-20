@@ -4,7 +4,7 @@ import {
   CurrencyCodeSchema,
   IsoDateTimeSchema,
   MoneySchema,
-} from '../common/primitives.js';
+} from '../common/primitives';
 
 export const CartStatusSchema = z.enum(['ACTIVE', 'ORDERED', 'ABANDONED', 'EXPIRED']);
 export type CartStatus = z.infer<typeof CartStatusSchema>;

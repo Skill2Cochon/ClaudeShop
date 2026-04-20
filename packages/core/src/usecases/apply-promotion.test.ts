@@ -10,9 +10,9 @@ import type {
   PromotionStatus,
   UpdatePromotionInput,
 } from '@claudeshop/contracts/promotion';
-import type { PromotionRepository } from '../ports/promotion-repository.js';
-import type { Clock } from '../ports/clock.js';
-import { applyPromotion } from './apply-promotion.js';
+import type { PromotionRepository } from '../ports/promotion-repository';
+import type { Clock } from '../ports/clock';
+import { applyPromotion } from './apply-promotion';
 
 class InMemoryPromotionRepository implements PromotionRepository {
   private readonly promotions = new Map<string, Promotion>();

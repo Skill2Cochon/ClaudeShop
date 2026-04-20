@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { toCsv } from './csv-writer.js';
+import { toCsv } from './csv-writer';
 
 describe('toCsv', () => {
   it('emits header + rows with CRLF', () => {

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CuidSchema, IsoDateTimeSchema } from '../common/primitives.js';
+import { CuidSchema, IsoDateTimeSchema } from '../common/primitives';
 
 /**
  * Event Topic Registry — every async/sync event flowing through the EventBus.

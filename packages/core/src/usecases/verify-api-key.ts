@@ -1,9 +1,9 @@
 import type {
   ApiKeyRepository,
   ApiKeyVerified,
-} from '../ports/api-key-repository.js';
-import type { PasswordHasher } from '../ports/password-hasher.js';
-import { extractApiKeyPrefix } from './mint-api-key.js';
+} from '../ports/api-key-repository';
+import type { PasswordHasher } from '../ports/password-hasher';
+import { extractApiKeyPrefix } from './mint-api-key';
 
 export interface VerifyApiKeyDeps {
   repo: ApiKeyRepository;

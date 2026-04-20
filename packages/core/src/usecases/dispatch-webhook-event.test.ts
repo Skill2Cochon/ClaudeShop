@@ -11,15 +11,15 @@ import type {
   HttpClient,
   HttpRequest,
   HttpResponse,
-} from '../ports/http-client.js';
+} from '../ports/http-client';
 import type {
   CreateWebhookDeliveryInput,
   RecordAttemptInput,
   WebhookDeliveryRepository,
-} from '../ports/webhook-delivery-repository.js';
-import type { WebhookSubscriptionRepository } from '../ports/webhook-subscription-repository.js';
-import type { Clock } from '../ports/clock.js';
-import { dispatchWebhookEvent } from './dispatch-webhook-event.js';
+} from '../ports/webhook-delivery-repository';
+import type { WebhookSubscriptionRepository } from '../ports/webhook-subscription-repository';
+import type { Clock } from '../ports/clock';
+import { dispatchWebhookEvent } from './dispatch-webhook-event';
 
 class InMemorySubscriptionRepo implements WebhookSubscriptionRepository {
   private readonly rows = new Map<string, WebhookSubscription>();

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { LocaleSchema } from './primitives.js';
+import { LocaleSchema } from './primitives';
 
 /**
  * Localized string — a map from locale code to string.

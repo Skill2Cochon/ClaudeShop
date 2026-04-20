@@ -1,5 +1,5 @@
 import type { PaymentProvider } from '@claudeshop/core';
-import { StubPaymentProvider } from '../adapters/stub-payment-provider.js';
+import { StubPaymentProvider } from '../adapters/stub-payment-provider';
 
 export interface PaymentProviderEnv {
   NODE_ENV: 'development' | 'test' | 'production';

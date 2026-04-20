@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { relativeTime } from './relative-time.js';
+import { relativeTime } from './relative-time';
 
 describe('relativeTime', () => {
   // Fixed reference so the tests are stable across runs.

@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { CuidSchema, IsoDateTimeSchema, SlugSchema } from '../common/primitives.js';
-import { LocalizedStringSchema } from '../common/i18n.js';
+import { CuidSchema, IsoDateTimeSchema, SlugSchema } from '../common/primitives';
+import { LocalizedStringSchema } from '../common/i18n';
 
 export const CategorySchema = z.object({
   id: CuidSchema,

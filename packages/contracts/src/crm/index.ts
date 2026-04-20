@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { CuidSchema, IsoDateTimeSchema } from '../common/primitives.js';
-import { CustomerGroupSchema } from '../customer/index.js';
+import { CuidSchema, IsoDateTimeSchema } from '../common/primitives';
+import { CustomerGroupSchema } from '../customer/index';
 
 // --- Segment rules -------------------------------------------------------
 

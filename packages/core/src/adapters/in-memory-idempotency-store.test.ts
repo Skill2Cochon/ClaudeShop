@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach, vi } from 'vitest';
-import { InMemoryIdempotencyStore } from './in-memory-idempotency-store.js';
+import { InMemoryIdempotencyStore } from './in-memory-idempotency-store';
 
 describe('InMemoryIdempotencyStore', () => {
   const tenantId = 'tnt01h0000000000000000000';

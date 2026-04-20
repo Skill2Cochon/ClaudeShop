@@ -1,5 +1,5 @@
-export { ApiErrorCode, type ApiErrorShape, type ApiError, type ApiSuccess } from './envelope.js';
-export { DomainError } from './domain-error.js';
+export { ApiErrorCode, type ApiErrorShape, type ApiError, type ApiSuccess } from './envelope';
+export { DomainError } from './domain-error';
 export {
   NotFoundError,
   ValidationError,
@@ -12,5 +12,5 @@ export {
   ModuleError,
   IdempotencyConflictError,
   TenantScopeError,
-} from './errors.js';
-export { toApiError, isDomainError } from './to-api-error.js';
+} from './errors';
+export { toApiError, isDomainError } from './to-api-error';
